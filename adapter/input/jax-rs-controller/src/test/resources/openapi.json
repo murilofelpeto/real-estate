@@ -1,0 +1,428 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "Real State API",
+    "description" : "This API helps manage all properties that are for sale, rent, generate contracts and much more",
+    "contact" : {
+      "name" : "Real Estate",
+      "url" : "https://realestate.com.br",
+      "email" : "contato@realestate.com.br"
+    },
+    "version" : "1"
+  },
+  "paths" : {
+    "/v1/property" : {
+      "get" : {
+        "summary" : "Get all properties",
+        "operationId" : "findAll",
+        "parameters" : [ {
+          "name" : "_limit",
+          "in" : "query",
+          "schema" : {
+            "maximum" : 50,
+            "minimum" : 1,
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        }, {
+          "name" : "_offset",
+          "in" : "query",
+          "schema" : {
+            "minimum" : 0,
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          }
+        }, {
+          "name" : "_sort",
+          "in" : "query",
+          "schema" : {
+            "type" : "string",
+            "default" : "ASC"
+          }
+        }, {
+          "name" : "propertyKind",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "country",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "state",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "city",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "neighborhood",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "schema" : {
+            "minimum" : 10,
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "rooms",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "isRent",
+          "in" : "query",
+          "schema" : {
+            "type" : "boolean"
+          }
+        }, {
+          "name" : "isSale",
+          "in" : "query",
+          "schema" : {
+            "type" : "boolean"
+          }
+        }, {
+          "name" : "isFurnished",
+          "in" : "query",
+          "schema" : {
+            "type" : "boolean"
+          }
+        }, {
+          "name" : "totalPrice",
+          "in" : "query",
+          "schema" : {
+            "type" : "number",
+            "description" : "This field is mandatory if isRent equals True"
+          }
+        }, {
+          "name" : "garage",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Return a list of properties",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/PropertyResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "204" : {
+            "description" : "empty list"
+          },
+          "422" : {
+            "description" : "Unprocessable Entity",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "operationId" : "uploadPropertyImages",
+        "responses" : {
+          "default" : {
+            "description" : "default response",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
+      }
+    },
+    "/v1/property/{id}" : {
+      "put" : {
+        "operationId" : "updateProperty_1",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/PropertyRequestDto"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "default" : {
+            "description" : "default response",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "operationId" : "updateProperty",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "default response",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "PropertyRequestDto" : {
+        "required" : [ "city", "country", "description", "garage", "isCondominium", "isFurnished", "isRent", "isSale", "neighborhood", "number", "propertyItems", "property_kind", "registration", "rooms", "size", "state", "street_name", "taxes", "zip_code" ],
+        "type" : "object",
+        "properties" : {
+          "registration" : {
+            "maxLength" : 15,
+            "minLength" : 15,
+            "type" : "string",
+            "description" : "Here you will insert your property registration number",
+            "example" : "CCCCC.L.NNNNNNN-DD"
+          },
+          "property_kind" : {
+            "type" : "string",
+            "enum" : [ "single-family", "multi-family", "townhouses", "condominiums", "apartments", "manufactured", "public", "retail", "office", "co-working", "land", "heavy-manufacturing", "light-manufacturing", "warehouses", "distribution-facilities" ]
+          },
+          "country" : {
+            "type" : "string"
+          },
+          "state" : {
+            "maxLength" : 2,
+            "minLength" : 2,
+            "type" : "string",
+            "description" : "We expect an abbreviation of the state"
+          },
+          "city" : {
+            "type" : "string"
+          },
+          "neighborhood" : {
+            "type" : "string"
+          },
+          "zip_code" : {
+            "type" : "string"
+          },
+          "street_name" : {
+            "type" : "string"
+          },
+          "number" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "complement" : {
+            "type" : "string"
+          },
+          "size" : {
+            "minimum" : 10,
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "rooms" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "isRent" : {
+            "type" : "boolean"
+          },
+          "isSale" : {
+            "type" : "boolean"
+          },
+          "isFurnished" : {
+            "type" : "boolean"
+          },
+          "rentPrice" : {
+            "type" : "number",
+            "description" : "This field is mandatory if isRent equals True"
+          },
+          "salePrice" : {
+            "type" : "number",
+            "description" : "This field is mandatory if isCondominium equals True"
+          },
+          "taxes" : {
+            "type" : "number"
+          },
+          "isCondominium" : {
+            "type" : "boolean"
+          },
+          "garage" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "propertyItems" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "array",
+              "items" : {
+                "type" : "string"
+              }
+            }
+          },
+          "condominiumItems" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "array",
+              "description" : "This field is mandatory when the property is in a condominium",
+              "items" : {
+                "type" : "string",
+                "description" : "This field is mandatory when the property is in a condominium"
+              }
+            },
+            "description" : "This field is mandatory when the property is in a condominium"
+          }
+        }
+      },
+      "PropertyResponseDto" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "propertyKind" : {
+            "type" : "string"
+          },
+          "country" : {
+            "type" : "string"
+          },
+          "state" : {
+            "type" : "string"
+          },
+          "city" : {
+            "type" : "string"
+          },
+          "neighborhood" : {
+            "type" : "string"
+          },
+          "zipCode" : {
+            "type" : "string"
+          },
+          "streetName" : {
+            "type" : "string"
+          },
+          "number" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "complement" : {
+            "type" : "string"
+          },
+          "size" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "rooms" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "isRent" : {
+            "type" : "boolean"
+          },
+          "isSale" : {
+            "type" : "boolean"
+          },
+          "isFurnished" : {
+            "type" : "boolean"
+          },
+          "rentPrice" : {
+            "type" : "number"
+          },
+          "salePrice" : {
+            "type" : "number"
+          },
+          "taxes" : {
+            "type" : "number"
+          },
+          "isCondominium" : {
+            "type" : "boolean"
+          },
+          "condominiumValue" : {
+            "type" : "number"
+          },
+          "garage" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "propertyItems" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "array",
+              "items" : {
+                "type" : "string"
+              }
+            }
+          },
+          "condominiumItems" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "array",
+              "items" : {
+                "type" : "string"
+              }
+            }
+          },
+          "images" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "array",
+              "items" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
