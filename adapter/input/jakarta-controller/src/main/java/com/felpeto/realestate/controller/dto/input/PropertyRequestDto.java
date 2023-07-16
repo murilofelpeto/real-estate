@@ -29,7 +29,6 @@ import lombok.experimental.FieldNameConstants;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldNameConstants
 public class PropertyRequestDto {
 
   @Schema(
@@ -97,8 +96,8 @@ public class PropertyRequestDto {
   private String streetName;
 
   @Schema(name = "number", requiredMode = REQUIRED)
-  @NotNull
-  @Positive(message = "Number is mandatory")
+  @NotNull(message = "Number is mandatory")
+  @Positive(message = "Number is must be greater than zero")
   private Integer number;
 
   @Schema(name = "complement")

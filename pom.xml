@@ -11,7 +11,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>adapter/input/jax-rs-controller</module>
+    <module>adapter/input/jakarta-controller</module>
     <module>app/spring-boot</module>
   </modules>
 
@@ -78,7 +78,7 @@
       <!-- ADD HERE EACH MODULE, SO OTHER MODULES CAN IMPORT THEM -->
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>jax-rs-controller</artifactId>
+        <artifactId>jakarta-controller</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
