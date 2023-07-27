@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class Neighborhood {
+public final class Neighborhood {
 
   private final String value;
 
@@ -17,8 +17,8 @@ public class Neighborhood {
   }
 
   public static Neighborhood of(final String value) {
-    if(StringUtils.isBlank(value)) {
-        throw new IllegalArgumentException("Neighborhood is mandatory");
+    if (StringUtils.isBlank(value)) {
+      throw new IllegalArgumentException("Neighborhood is mandatory");
     }
 
     return new Neighborhood(value);

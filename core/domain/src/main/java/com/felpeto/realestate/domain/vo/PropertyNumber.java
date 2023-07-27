@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class PropertyNumber {
+public final class PropertyNumber {
 
   private final Integer value;
 
@@ -21,8 +21,8 @@ public class PropertyNumber {
   public static PropertyNumber of(final Integer value) {
     requireNonNull(value, "Property number is mandatory");
 
-    if(value <= 0) {
-        throw new InvalidPropertyNumberException("Property number must be greater than 0");
+    if (value <= 0) {
+      throw new InvalidPropertyNumberException("Property number must be greater than 0");
     }
     return new PropertyNumber(value);
   }

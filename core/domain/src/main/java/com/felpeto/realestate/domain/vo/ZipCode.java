@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class ZipCode {
+public final class ZipCode {
 
   private final String value;
 
@@ -17,7 +17,7 @@ public class ZipCode {
   }
 
   public static ZipCode of(final String value) {
-    if(StringUtils.isBlank(value)) {
+    if (StringUtils.isBlank(value)) {
       throw new IllegalArgumentException("ZipCode is mandatory");
     }
     return new ZipCode(value);

@@ -4,6 +4,7 @@ import static java.text.MessageFormat.format;
 import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
 
+import lombok.Builder;
 import lombok.experimental.FieldNameConstants;
 
 @FieldNameConstants(level = PRIVATE)
@@ -18,6 +19,7 @@ public record Address(Country country,
 
   private static final String MANDATORY_FIELD = "[Address] | {0} is mandatory";
 
+  @Builder
   public Address(final Country country,
       final State state,
       final City city,

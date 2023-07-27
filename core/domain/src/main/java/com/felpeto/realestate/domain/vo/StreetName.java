@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class StreetName {
+public final class StreetName {
 
   private final String value;
 
@@ -18,7 +18,7 @@ public class StreetName {
 
   public static StreetName of(final String value) {
     if (StringUtils.isBlank(value)) {
-        throw new IllegalArgumentException("StreetName is mandatory");
+      throw new IllegalArgumentException("StreetName is mandatory");
     }
     return new StreetName(value);
   }

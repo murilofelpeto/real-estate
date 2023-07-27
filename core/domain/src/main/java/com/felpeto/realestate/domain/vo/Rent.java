@@ -2,14 +2,13 @@ package com.felpeto.realestate.domain.vo;
 
 import static java.util.Objects.requireNonNull;
 
-import lombok.EqualsAndHashCode;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString
-@EqualsAndHashCode
-public class Rent {
+public final class Rent {
 
   private final boolean isRent;
   private final Money price;
@@ -25,5 +24,22 @@ public class Rent {
       return new Rent(true, price);
     }
     return new Rent(false, null);
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    final Rent rent = (Rent) o;
+    return Objects.equals(price, rent.price);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(price);
   }
 }

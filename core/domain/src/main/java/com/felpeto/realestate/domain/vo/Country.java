@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class Country {
+public final class Country {
 
   private final String value;
 
@@ -17,7 +17,7 @@ public class Country {
   }
 
   public static Country of(final String value) {
-    if(StringUtils.isBlank(value)) {
+    if (StringUtils.isBlank(value)) {
       throw new IllegalArgumentException("Country is mandatory");
     }
     return new Country(value);

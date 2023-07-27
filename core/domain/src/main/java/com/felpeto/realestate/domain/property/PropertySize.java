@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
 
 import com.felpeto.realestate.domain.vo.Size;
+import lombok.Builder;
 import lombok.experimental.FieldNameConstants;
 
 @FieldNameConstants(level = PRIVATE)
@@ -15,6 +16,7 @@ public record PropertySize(Size landSize,
 
   private static final String MANDATORY_FIELD = "[PropertySize] | {0} is mandatory";
 
+  @Builder
   public PropertySize(final Size landSize,
       final Size buildingArea,
       final Size garage,

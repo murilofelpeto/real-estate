@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class State {
+public final class State {
 
   private final String value;
 
@@ -17,8 +17,8 @@ public class State {
   }
 
   public static State of(final String value) {
-    if (StringUtils.isBlank(value) || value.length() > 2) {
-        throw new IllegalArgumentException("State is mandatory and must be abbreviated");
+    if (StringUtils.isBlank(value) || value.length() != 2) {
+      throw new IllegalArgumentException("State is mandatory and must be abbreviated");
     }
     return new State(value);
   }

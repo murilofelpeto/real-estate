@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class Size {
+public final class Size {
 
   private final Integer value;
 
@@ -19,7 +19,7 @@ public class Size {
 
   public static Size of(final Integer value) {
     requireNonNull(value, "Size is mandatory");
-    if(value < 0) {
+    if (value < 0) {
       throw new IllegalArgumentException("Size must be positive");
     }
 

@@ -1,7 +1,5 @@
 package com.felpeto.realestate.domain.vo;
 
-import static java.util.Objects.requireNonNull;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,12 +46,6 @@ public enum LeisureItem {
   HOBBY_WORKSHOP("hobby workshop"),
   PET_AREA("pet area");
 
-  private final String description;
-
-  LeisureItem(final String description) {
-    this.description = description;
-  }
-
   private static final Map<String, LeisureItem> ITEM_BY_DESCRIPTION = new HashMap<>();
 
   static {
@@ -61,11 +53,19 @@ public enum LeisureItem {
         .forEach(item -> ITEM_BY_DESCRIPTION.put(item.getDescription().toLowerCase(), item));
   }
 
+  private final String description;
+
+  LeisureItem(final String description) {
+    this.description = description;
+  }
+
   public static LeisureItem of(final String description) {
-      requireNonNull(description, "description is mandatory");
-      if(StringUtils.isBlank(description)) {
-          throw new IllegalArgumentException("description is mandatory");
-      }
+    if (StringUtils.isBlank(description)) {
+      throw new IllegalArgumentException("description is mandatory");
+    }
+    if (!ITEM_BY_DESCRIPTION.containsKey(description.toLowerCase())) {
+      throw new IllegalArgumentException("description not found: " + description);
+    }
     return ITEM_BY_DESCRIPTION.get(description.toLowerCase());
   }
 }

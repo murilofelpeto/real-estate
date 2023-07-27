@@ -1,10 +1,8 @@
 package com.felpeto.realestate.domain.vo;
 
-import static java.util.Objects.requireNonNull;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public enum PropertyKind {
 
@@ -25,21 +23,33 @@ public enum PropertyKind {
       "distribution-facilities");
 
   private static final String VALUE_NOT_FOUND = "PropertyKind | Desired value not found";
-  private final List<String> kind;
+  private static final Map<String, PropertyKind> VALUE_MAP = new HashMap<>();
+
+  static {
+    for (PropertyKind kind : values()) {
+      for (String kindValue : kind.kind) {
+        VALUE_MAP.put(kindValue.toLowerCase(), kind);
+      }
+    }
+  }
+
+  private final String[] kind;
 
   PropertyKind(final String... kind) {
-    this.kind = List.of(kind);
+    this.kind = kind;
   }
 
   public static PropertyKind of(final String propertyKind) {
-    requireNonNull(propertyKind, VALUE_NOT_FOUND);
-    return Arrays.stream(values())
-        .filter(property -> property.kind.contains(propertyKind.toLowerCase()))
-        .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException(VALUE_NOT_FOUND));
+    Objects.requireNonNull(propertyKind, VALUE_NOT_FOUND);
+    String lowercaseKind = propertyKind.toLowerCase();
+    PropertyKind result = VALUE_MAP.get(lowercaseKind);
+    if (result == null) {
+      throw new IllegalArgumentException(VALUE_NOT_FOUND);
+    }
+    return result;
   }
 
-  public List<String> getKind() {
-    return new ArrayList<>(kind);
+  public String[] getKind() {
+    return kind.clone();
   }
 }
