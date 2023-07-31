@@ -3,6 +3,7 @@ package com.felpeto.realestate.domain.vo;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -48,8 +49,10 @@ public enum LeisureItem {
 
   private static final Map<String, LeisureItem> ITEM_BY_DESCRIPTION = new HashMap<>();
 
+  private static final LeisureItem[] VALUES = values();
+
   static {
-    Arrays.stream(values())
+    Arrays.stream(VALUES)
         .forEach(item -> ITEM_BY_DESCRIPTION.put(item.getDescription().toLowerCase(), item));
   }
 
@@ -68,4 +71,9 @@ public enum LeisureItem {
     }
     return ITEM_BY_DESCRIPTION.get(description.toLowerCase());
   }
+
+  public static Stream<LeisureItem> streamValues() {
+    return Stream.of(VALUES);
+  }
+
 }

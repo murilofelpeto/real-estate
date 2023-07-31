@@ -1,7 +1,5 @@
 package com.felpeto.realestate.domain.vo;
 
-import static java.util.Objects.requireNonNull;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
@@ -19,7 +17,10 @@ public final class Money {
   }
 
   public static Money of(final BigDecimal value) {
-    requireNonNull(value, "Money is mandatory");
+    if (value == null) {
+      return new Money(null);
+    }
+
     if (BigDecimal.ONE.compareTo(value) > 0) {
       throw new IllegalArgumentException("value must be greater than or equal to 1: " + value);
     }

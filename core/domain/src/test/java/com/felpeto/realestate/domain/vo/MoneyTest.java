@@ -62,11 +62,9 @@ class MoneyTest {
   }
 
   @Test
-  @DisplayName("Given invalid parameters when build Money then throw exception")
+  @DisplayName("Given null value when build Money then return empty money")
   void givenInvalidParametersWhenBuildMoneyThenThrowException() {
-
-    assertThatThrownBy(() -> Money.of(null))
-        .hasMessage("Money is mandatory")
-        .isExactlyInstanceOf(NullPointerException.class);
+    final var money = Money.of(null);
+    assertThat(money.getValue()).isNull();
   }
 }

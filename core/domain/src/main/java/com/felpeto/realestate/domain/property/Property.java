@@ -13,11 +13,13 @@ import com.felpeto.realestate.domain.vo.Registration;
 import com.felpeto.realestate.domain.vo.Rent;
 import com.felpeto.realestate.domain.vo.Sale;
 import java.util.List;
+import java.util.UUID;
 import lombok.experimental.FieldNameConstants;
 import org.apache.commons.lang3.StringUtils;
 
 @FieldNameConstants(level = PRIVATE)
-public record Property(Registration registration,
+public record Property(UUID uuid,
+                       Registration registration,
                        PropertyKind propertyKind,
                        Address address,
                        PropertySize size,
@@ -31,7 +33,8 @@ public record Property(Registration registration,
 
   private static final String MANDATORY_FIELD = "[Property] | {0} is mandatory";
 
-  public Property(Registration registration,
+  public Property(UUID uuid,
+      Registration registration,
       PropertyKind propertyKind,
       Address address,
       PropertySize size,
@@ -58,6 +61,7 @@ public record Property(Registration registration,
     }
 
     this.description = description;
+    this.uuid = uuid;
 
   }
 
@@ -65,8 +69,9 @@ public record Property(Registration registration,
     return new PropertyBuilder();
   }
 
-  static class PropertyBuilder {
+  public static class PropertyBuilder {
 
+    private UUID uuid;
     private Registration registration;
     private PropertyKind propertyKind;
     private Address address;
@@ -78,6 +83,11 @@ public record Property(Registration registration,
     private Condominium condominium;
     private String description;
     private List<LeisureItem> items;
+
+    public PropertyBuilder uuid(UUID uuid) {
+      this.uuid = uuid;
+      return this;
+    }
 
     public PropertyBuilder registration(Registration registration) {
       this.registration = registration;
@@ -135,7 +145,7 @@ public record Property(Registration registration,
     }
 
     public Property build() {
-      return new Property(
+      return new Property(uuid,
           registration,
           propertyKind,
           address,

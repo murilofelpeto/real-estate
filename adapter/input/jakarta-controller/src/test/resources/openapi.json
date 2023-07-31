@@ -11,6 +11,47 @@
     "version" : "1"
   },
   "paths" : {
+    "/v1/owner" : {
+      "post" : {
+        "summary" : "Create an owner",
+        "operationId" : "createOwner",
+        "requestBody" : {
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OwnerRequestDto"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Return the created owner",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "There is a owner with the same information"
+          },
+          "422" : {
+            "description" : "Unprocessable Entity",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/property" : {
       "get" : {
         "summary" : "Get all properties",
@@ -135,79 +176,6 @@
           },
           "204" : {
             "description" : "empty list"
-          },
-          "422" : {
-            "description" : "Unprocessable Entity",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "object"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post" : {
-        "operationId" : "uploadPropertyImages",
-        "responses" : {
-          "default" : {
-            "description" : "default response",
-            "content" : {
-              "application/json" : { }
-            }
-          }
-        }
-      }
-    },
-    "/v1/property/{id}" : {
-      "put" : {
-        "operationId" : "updateProperty_1",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string",
-            "format" : "uuid"
-          }
-        } ],
-        "requestBody" : {
-          "content" : {
-            "*/*" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/PropertyRequestDto"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "default" : {
-            "description" : "default response",
-            "content" : {
-              "application/json" : { }
-            }
-          }
-        }
-      },
-      "delete" : {
-        "operationId" : "updateProperty",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string",
-            "format" : "uuid"
-          }
-        } ],
-        "responses" : {
-          "default" : {
-            "description" : "default response",
-            "content" : {
-              "application/json" : { }
-            }
           }
         }
       }
@@ -215,20 +183,22 @@
   },
   "components" : {
     "schemas" : {
-      "PropertyRequestDto" : {
-        "required" : [ "city", "country", "description", "garage", "isCondominium", "isFurnished", "isRent", "isSale", "neighborhood", "number", "propertyItems", "property_kind", "registration", "rooms", "size", "state", "street_name", "taxes", "zip_code" ],
+      "OwnerRequestDto" : {
+        "required" : [ "city", "country", "document", "document type", "email", "name", "neighborhood", "number", "phoneNumber", "state", "street_name", "zip_code" ],
         "type" : "object",
         "properties" : {
-          "registration" : {
-            "maxLength" : 15,
-            "minLength" : 15,
-            "type" : "string",
-            "description" : "Here you will insert your property registration number",
-            "example" : "CCCCC.L.NNNNNNN-DD"
+          "name" : {
+            "type" : "string"
           },
-          "property_kind" : {
+          "email" : {
+            "type" : "string"
+          },
+          "document" : {
+            "type" : "string"
+          },
+          "document type" : {
             "type" : "string",
-            "enum" : [ "single-family", "multi-family", "townhouses", "condominiums", "apartments", "manufactured", "public", "retail", "office", "co-working", "land", "heavy-manufacturing", "light-manufacturing", "warehouses", "distribution-facilities" ]
+            "enum" : [ "CPF", "CNPJ" ]
           },
           "country" : {
             "type" : "string"
@@ -258,65 +228,8 @@
           "complement" : {
             "type" : "string"
           },
-          "size" : {
-            "minimum" : 10,
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "rooms" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "isRent" : {
-            "type" : "boolean"
-          },
-          "isSale" : {
-            "type" : "boolean"
-          },
-          "isFurnished" : {
-            "type" : "boolean"
-          },
-          "rentPrice" : {
-            "type" : "number",
-            "description" : "This field is mandatory if isRent equals True"
-          },
-          "salePrice" : {
-            "type" : "number",
-            "description" : "This field is mandatory if isCondominium equals True"
-          },
-          "taxes" : {
-            "type" : "number"
-          },
-          "isCondominium" : {
-            "type" : "boolean"
-          },
-          "garage" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "description" : {
+          "phoneNumber" : {
             "type" : "string"
-          },
-          "propertyItems" : {
-            "type" : "object",
-            "additionalProperties" : {
-              "type" : "array",
-              "items" : {
-                "type" : "string"
-              }
-            }
-          },
-          "condominiumItems" : {
-            "type" : "object",
-            "additionalProperties" : {
-              "type" : "array",
-              "description" : "This field is mandatory when the property is in a condominium",
-              "items" : {
-                "type" : "string",
-                "description" : "This field is mandatory when the property is in a condominium"
-              }
-            },
-            "description" : "This field is mandatory when the property is in a condominium"
           }
         }
       },
@@ -355,7 +268,11 @@
           "complement" : {
             "type" : "string"
           },
-          "size" : {
+          "landSize" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "buildingArea" : {
             "type" : "integer",
             "format" : "int32"
           },

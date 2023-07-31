@@ -2,7 +2,19 @@
 <FindBugsFilter>
 
   <Match>
-    <Source name="~.*\Dto.java" />
+    <Source name="~.*\Repository.java"/>
+  </Match>
+  <Match>
+    <Source name="~.*\Dto.java"/>
+  </Match>
+
+  <Match>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+    <Priority value="2"/>
+  </Match>
+  <Match>
+    <Bug pattern="EI_EXPOSE_REP"/>
+    <Priority value="2"/>
   </Match>
 
 </FindBugsFilter>

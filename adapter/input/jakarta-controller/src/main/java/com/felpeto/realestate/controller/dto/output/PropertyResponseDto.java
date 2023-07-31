@@ -29,7 +29,8 @@ public class PropertyResponseDto {
   private String streetName;
   private Integer number;
   private String complement;
-  private Integer size;
+  private Integer landSize;
+  private Integer buildingArea;
   private Integer rooms;
   private Boolean isRent;
   private Boolean isSale;

@@ -24,6 +24,7 @@ import com.github.javafaker.Faker;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
@@ -305,6 +306,7 @@ class PropertyTest {
     final var condominium = createCondominium();
     final var description = faker.lorem().paragraph();
     final var leisureItems = List.of(faker.options().option(LeisureItem.class));
+    final var uuid = UUID.randomUUID();
     final var property = Property.builder()
         .registration(registration)
         .propertyKind(propertyKind)
@@ -317,10 +319,12 @@ class PropertyTest {
         .condominium(condominium)
         .description(description)
         .items(leisureItems)
+        .uuid(uuid)
         .build();
 
     assertThat(property).isNotNull()
         .satisfies(p -> {
+          assertThat(p.uuid()).isEqualTo(uuid);
           assertThat(p.registration()).isEqualTo(registration);
           assertThat(p.propertyKind()).isEqualTo(propertyKind);
           assertThat(p.address()).isEqualTo(address);
@@ -354,6 +358,7 @@ class PropertyTest {
       final Class<?> exception) {
 
     assertThatThrownBy(() -> Property.builder()
+        .uuid(UUID.randomUUID())
         .registration(registration)
         .propertyKind(propertyKind)
         .address(address)

@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.github.javafaker.Faker;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -46,5 +48,19 @@ class LeisureItemTest {
     assertThatThrownBy(() -> LeisureItem.of(description))
         .isInstanceOf(exception)
         .hasMessage(message);
+  }
+
+  @Test
+  @DisplayName("Given all values for LeisureItem then return all")
+  void givenAllValuesWhenGetStreamThenReturnAll() {
+    final var allDescriptions = LeisureItem.streamValues()
+        .map(LeisureItem::getDescription)
+        .collect(Collectors.toSet());
+
+    assertThat(allDescriptions)
+        .hasSize(LeisureItem.values().length)
+        .containsExactlyInAnyOrder(
+            LeisureItem.streamValues().map(LeisureItem::getDescription).toArray(String[]::new)
+        );
   }
 }

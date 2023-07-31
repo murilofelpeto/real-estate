@@ -21,7 +21,7 @@ class OwnerControllerTest {
     final OwnerRequestDto ownerRequestDto = createOwner();
 
     final Response response = controller.createOwner(ownerRequestDto);
-    assertThat(response.getStatus()).isEqualTo(CREATED.ordinal());
+    assertThat(response.getStatus()).isEqualTo(CREATED.getStatusCode());
   }
 
   private OwnerRequestDto createOwner() {
