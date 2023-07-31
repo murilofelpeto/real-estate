@@ -2,7 +2,6 @@ package com.felpeto.realestate.domain;
 
 import com.felpeto.realestate.domain.vo.City;
 import com.felpeto.realestate.domain.vo.Country;
-import com.felpeto.realestate.domain.vo.Money;
 import com.felpeto.realestate.domain.vo.Neighborhood;
 import com.felpeto.realestate.domain.vo.PropertyKind;
 import com.felpeto.realestate.domain.vo.Size;
@@ -20,7 +19,6 @@ public record Filter(PropertyKind propertyKind,
                      Boolean isRent,
                      Boolean isSale,
                      Boolean isFurnished,
-                     Money totalPrice,
                      Size garage) {
 
 }

@@ -1,7 +1,6 @@
 package com.felpeto.realestate.jpa.property;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -15,7 +14,6 @@ import com.felpeto.realestate.domain.Page;
 import com.felpeto.realestate.domain.vo.City;
 import com.felpeto.realestate.domain.vo.Country;
 import com.felpeto.realestate.domain.vo.LeisureItem;
-import com.felpeto.realestate.domain.vo.Money;
 import com.felpeto.realestate.domain.vo.Neighborhood;
 import com.felpeto.realestate.domain.vo.PropertyKind;
 import com.felpeto.realestate.domain.vo.Size;
@@ -40,17 +38,16 @@ class PropertyRepositoryTest {
 
   private static final String REGEX = "[0-9]{5}\\.[0-9]{1}\\.[0-9]{7}-[0-9]{2}";
   private static final String SELECT_FILTERED_PROPERTY =
-      "select p from Property p"
+      "select p from PropertyEntity p"
           + " where (p.propertyKind = :propertyKind OR :propertyKind is null)"
           + " and (p.country = :country OR :country is null)"
           + " and (p.state = :state OR :state is null)"
           + " and (p.city = :city OR :city is null)"
           + " and (p.neighborhood = :neighborhood OR :neighborhood is null)"
-          + " and (p.size = :size OR :size is null)"
+          + " and (p.landSize = :size OR :size is null)"
           + " and (p.isRent = :isRent OR :isRent is null)"
           + " and (p.isSale = :isSale OR :isSale is null)"
           + " and (p.isFurnished = :isFurnished OR :isFurnished is null)"
-          + " and (p.totalPrice = :totalPrice OR :totalPrice is null)"
           + " and (p.garage = :garage OR :garage is null)"
           + " order by p.{sort} {sortMode}";
 
@@ -84,7 +81,6 @@ class PropertyRepositoryTest {
         .rooms(Size.of(faker.number().numberBetween(0, 10)))
         .size(Size.of(faker.number().numberBetween(0, 10)))
         .state(State.of(faker.address().stateAbbr()))
-        .totalPrice(Money.of(new BigDecimal(faker.number().numberBetween(0, 100))))
         .build();
 
     final var entity = createEntity();
@@ -112,8 +108,6 @@ class PropertyRepositoryTest {
         .thenReturn(propertyEntityQuery);
     when(propertyEntityQuery.setParameter("isFurnished", filter.isFurnished()))
         .thenReturn(propertyEntityQuery);
-    when(propertyEntityQuery.setParameter("totalPrice", filter.totalPrice().getValue()))
-        .thenReturn(propertyEntityQuery);
     when(propertyEntityQuery.setParameter("garage", filter.garage().getValue()))
         .thenReturn(propertyEntityQuery);
     when(propertyEntityQuery.setFirstResult(page.getOffset() * page.getLimit()))
@@ -131,7 +125,6 @@ class PropertyRepositoryTest {
     verify(propertyEntityQuery, times(5)).setParameter(anyString(), anyString());
     verify(propertyEntityQuery, times(3)).setParameter(anyString(), anyBoolean());
     verify(propertyEntityQuery, times(2)).setParameter(anyString(), anyInt());
-    verify(propertyEntityQuery).setParameter(anyString(), any(BigDecimal.class));
     verify(propertyEntityQuery).setMaxResults(page.getLimit());
     verify(propertyEntityQuery).setFirstResult(page.getOffset() * page.getLimit());
     verifyNoMoreInteractions(entityManager, propertyEntityQuery);

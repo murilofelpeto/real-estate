@@ -3,12 +3,10 @@ package com.felpeto.realestate.controller.dto.input;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.ws.rs.QueryParam;
-import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -63,11 +61,6 @@ public class FilterDto {
 
   @QueryParam("isFurnished")
   private Boolean isFurnished;
-
-  @Schema(name = "rentPrice", description = "This field is mandatory if isRent equals True")
-  @Digits(fraction = 2, integer = Integer.MAX_VALUE)
-  @QueryParam("totalPrice")
-  private BigDecimal totalPrice;
 
   @Schema(name = "garage", requiredMode = REQUIRED)
   @PositiveOrZero(message = "garage must be positive")

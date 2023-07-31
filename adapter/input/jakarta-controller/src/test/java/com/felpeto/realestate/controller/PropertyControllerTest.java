@@ -117,7 +117,6 @@ class PropertyControllerTest {
         .rooms(faker.number().numberBetween(1, 9999))
         .size(faker.number().numberBetween(60, 9999999))
         .state(faker.address().stateAbbr())
-        .totalPrice(BigDecimal.valueOf(faker.number().randomDouble(2, 1000, 999999)))
         .build();
   }
 

@@ -3,7 +3,6 @@ package com.felpeto.realestate.controller.dto.input;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.QueryParam;
 import lombok.AllArgsConstructor;
@@ -37,6 +36,6 @@ public class PageDto {
 
   @Schema(name = "_sort")
   @QueryParam("_sort")
-  @DefaultValue("ASC")
+  @DefaultValue("+property_kind")
   private String sort;
 }

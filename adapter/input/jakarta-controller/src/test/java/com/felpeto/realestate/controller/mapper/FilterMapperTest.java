@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.felpeto.realestate.controller.dto.input.FilterDto;
 import com.felpeto.realestate.domain.vo.PropertyKind;
 import com.github.javafaker.Faker;
-import java.math.BigDecimal;
 import java.util.Arrays;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +31,6 @@ class FilterMapperTest {
     assertThat(filter.rooms().getValue()).isEqualTo(filterDto.getRooms());
     assertThat(filter.size().getValue()).isEqualTo(filterDto.getSize());
     assertThat(filter.state().getValue()).isEqualTo(filterDto.getState());
-    assertThat(filter.totalPrice().getValue()).isEqualTo(filterDto.getTotalPrice());
   }
 
   private FilterDto createFilter() {
@@ -54,7 +52,6 @@ class FilterMapperTest {
         .rooms(faker.number().numberBetween(1, 9999))
         .size(faker.number().numberBetween(60, 9999999))
         .state(faker.address().stateAbbr())
-        .totalPrice(BigDecimal.valueOf(faker.number().randomDouble(2, 1000, 999999)))
         .build();
   }
 }

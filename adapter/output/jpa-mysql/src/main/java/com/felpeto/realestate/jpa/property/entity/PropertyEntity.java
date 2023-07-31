@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
@@ -22,7 +23,9 @@ import lombok.ToString;
 @Entity
 @Getter
 @ToString
-@Table(name = "property")
+@Table(name = "property", indexes = {
+    @Index(name = "idx_property_entity", columnList = "registration, uuid")
+})
 @NoArgsConstructor
 public class PropertyEntity {
 
@@ -37,9 +40,6 @@ public class PropertyEntity {
 
   @Column(columnDefinition = "registration", nullable = false, unique = true)
   private String registration;
-
-  @Column(name = "property_kind", nullable = false)
-  private String propertyKind;
 
   @Column(name = "property_leisure_items", nullable = false)
   private List<String> propertyLeisureItems;
@@ -110,6 +110,9 @@ public class PropertyEntity {
   @Column(name = "description", nullable = false)
   private String description;
 
+  @Column(name = "property_kind", nullable = false)
+  private String propertyKind;
+
   public PropertyEntity(
       final Long id,
       final UUID uuid,
@@ -174,6 +177,10 @@ public class PropertyEntity {
 
   public static PropertyEntityBuilder builder() {
     return new PropertyEntityBuilder();
+  }
+
+  public void setPropertyKind(String propertyKind) {
+    this.propertyKind = propertyKind;
   }
 
   public List<String> getCondominiumLeisureItems() {

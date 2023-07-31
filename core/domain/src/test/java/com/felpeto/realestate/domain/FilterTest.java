@@ -64,7 +64,6 @@ class FilterTest {
         .rooms(rooms)
         .size(size)
         .state(state)
-        .totalPrice(totalPrice)
         .build();
 
     assertThat(filter.city()).isEqualTo(city);
@@ -78,7 +77,6 @@ class FilterTest {
     assertThat(filter.rooms()).isEqualTo(rooms);
     assertThat(filter.size()).isEqualTo(size);
     assertThat(filter.state()).isEqualTo(state);
-    assertThat(filter.totalPrice()).isEqualTo(totalPrice);
   }
 
   @Test
@@ -96,7 +94,6 @@ class FilterTest {
         .rooms(null)
         .size(null)
         .state(null)
-        .totalPrice(null)
         .build();
 
     assertThat(filter.city()).isNull();
@@ -110,6 +107,5 @@ class FilterTest {
     assertThat(filter.rooms()).isNull();
     assertThat(filter.size()).isNull();
     assertThat(filter.state()).isNull();
-    assertThat(filter.totalPrice()).isNull();
   }
 }

@@ -66,7 +66,6 @@ class PropertyGetterTest {
         .rooms(Size.of(faker.number().numberBetween(0, 10)))
         .size(Size.of(faker.number().numberBetween(0, 10)))
         .state(State.of(faker.address().stateAbbr()))
-        .totalPrice(Money.of(new BigDecimal(faker.number().numberBetween(0, 100))))
         .build();
     final var property = createProperty();
 
@@ -86,7 +85,7 @@ class PropertyGetterTest {
                 .getKind())
         .findFirst()
         .get();
-    
+
     final var registration = Registration.of(faker.expression(faker.regexify(REGEX)));
     final var address = createAddress();
     final var propertySize = createPropertySize();
