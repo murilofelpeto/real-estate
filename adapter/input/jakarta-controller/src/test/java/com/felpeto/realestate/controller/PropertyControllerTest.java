@@ -33,7 +33,6 @@ import com.github.javafaker.Faker;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
@@ -99,11 +98,7 @@ class PropertyControllerTest {
   }
 
   private FilterDto createFilter() {
-    final String propertyKind = Arrays.stream(
-            faker.options().option(PropertyKind.class)
-                .getKind())
-        .findFirst()
-        .get();
+    final var propertyKind = faker.options().option(PropertyKind.class).getKind();
 
     return FilterDto.builder()
         .city(faker.address().city())

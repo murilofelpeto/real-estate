@@ -6,12 +6,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.felpeto.realestate.domain.vo.LeisureItem;
 import com.felpeto.realestate.domain.vo.PropertyKind;
+import com.felpeto.realestate.jpa.property.entity.LeisureItemEntity;
 import com.felpeto.realestate.jpa.property.entity.PropertyEntity;
 import com.github.javafaker.Faker;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,11 +39,13 @@ class PropertyEntityMapperTest {
 
     final var condominiumLeisureItems = entity.getCondominiumLeisureItems()
         .stream()
+        .map(LeisureItemEntity::getItem)
         .map(LeisureItem::of)
         .toList();
 
     final var propertyLeisureItems = entity.getPropertyLeisureItems()
         .stream()
+        .map(LeisureItemEntity::getItem)
         .map(LeisureItem::of)
         .toList();
 
@@ -85,17 +89,12 @@ class PropertyEntityMapperTest {
   }
 
   private PropertyEntity createEntity() {
-    final String propertyKind = Arrays.stream(
-            faker.options().option(PropertyKind.class)
-                .getKind())
-        .findFirst()
-        .get();
-
+    final var propertyKind = faker.options().option(PropertyKind.class).getKind();
     final var id = faker.number().numberBetween(1L, 100L);
     final var buildingArea = faker.number().numberBetween(1, 100);
     final var city = faker.address().city();
     final var complement = faker.ancient().god();
-    final var condominiumLeisureItem = faker.options().option(LeisureItem.class).getDescription();
+    final var condominiumLeisureItem = createLeisureItemEntity();
     final var country = faker.address().country();
     final var description = faker.lorem().paragraph();
     final int garage = faker.number().numberBetween(1, 10);
@@ -103,7 +102,7 @@ class PropertyEntityMapperTest {
     final var isFurnished = faker.bool().bool();
     final var landSize = faker.number().numberBetween(1, 100);
     final var neighborhood = faker.rickAndMorty().location();
-    final var propertyLeisureItem = faker.options().option(LeisureItem.class).getDescription();
+    final var propertyLeisureItem = createLeisureItemEntity();
     final var registration = faker.expression(faker.regexify(REGEX));
     final var rooms = faker.number().numberBetween(1, 100);
     final var state = faker.address().stateAbbr();
@@ -117,7 +116,7 @@ class PropertyEntityMapperTest {
         .buildingArea(buildingArea)
         .city(city)
         .complement(complement)
-        .condominiumLeisureItems(List.of(condominiumLeisureItem))
+        .condominiumLeisureItems(condominiumLeisureItem)
         .condominiumPrice(TEN)
         .country(country)
         .description(description)
@@ -130,7 +129,7 @@ class PropertyEntityMapperTest {
         .landSize(landSize)
         .neighborhood(neighborhood)
         .propertyKind(propertyKind)
-        .propertyLeisureItems(List.of(propertyLeisureItem))
+        .propertyLeisureItems(propertyLeisureItem)
         .registration(registration)
         .rentPrice(TEN)
         .rooms(rooms)
@@ -141,5 +140,18 @@ class PropertyEntityMapperTest {
         .uuid(uuid)
         .zipcode(zipcode)
         .build();
+  }
+
+  private Set<LeisureItemEntity> createLeisureItemEntity() {
+    final var items = new HashSet<LeisureItemEntity>();
+    for (int i = 0; i < 10; i++) {
+      final var leisureItemEntity = LeisureItemEntity.builder()
+          .item(faker.options().option(LeisureItem.class).getDescription())
+          .leisureItemId(faker.number().numberBetween(1L, 100L))
+          .uuid(UUID.randomUUID())
+          .build();
+      items.add(leisureItemEntity);
+    }
+    return items;
   }
 }

@@ -36,6 +36,6 @@ public class PageDto {
 
   @Schema(name = "_sort")
   @QueryParam("_sort")
-  @DefaultValue("+property_kind")
+  @DefaultValue("+propertyKind")
   private String sort;
 }

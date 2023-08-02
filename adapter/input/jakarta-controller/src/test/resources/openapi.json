@@ -80,7 +80,7 @@
           "in" : "query",
           "schema" : {
             "type" : "string",
-            "default" : "ASC"
+            "default" : "+propertyKind"
           }
         }, {
           "name" : "propertyKind",
@@ -144,13 +144,6 @@
           "in" : "query",
           "schema" : {
             "type" : "boolean"
-          }
-        }, {
-          "name" : "totalPrice",
-          "in" : "query",
-          "schema" : {
-            "type" : "number",
-            "description" : "This field is mandatory if isRent equals True"
           }
         }, {
           "name" : "garage",

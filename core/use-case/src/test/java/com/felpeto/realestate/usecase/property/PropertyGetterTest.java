@@ -28,7 +28,6 @@ import com.felpeto.realestate.domain.vo.ZipCode;
 import com.felpeto.realestate.usecase.property.port.PropertyGateway;
 import com.github.javafaker.Faker;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
@@ -80,11 +79,7 @@ class PropertyGetterTest {
   }
 
   private Property createProperty() {
-    final String propertyKind = Arrays.stream(
-            faker.options().option(PropertyKind.class)
-                .getKind())
-        .findFirst()
-        .get();
+    final String propertyKind = faker.options().option(PropertyKind.class).getKind();
 
     final var registration = Registration.of(faker.expression(faker.regexify(REGEX)));
     final var address = createAddress();

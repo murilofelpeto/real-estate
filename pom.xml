@@ -168,6 +168,11 @@
         <groupId>org.pitest</groupId>
         <version>${pitest-maven.version}</version>
       </plugin>
+      <plugin>
+        <artifactId>sonar-maven-plugin</artifactId>
+        <groupId>org.sonarsource.scanner.maven</groupId>
+        <version>${sonar-maven-plugin.version}</version>
+      </plugin>
     </plugins>
   </build>
 
@@ -311,18 +316,6 @@
         <version>${assertj.version}</version>
       </dependency>
       <dependency>
-        <artifactId>to-string-verifier</artifactId>
-        <groupId>com.jparams</groupId>
-        <scope>test</scope>
-        <version>${to-string-verifier.version}</version>
-      </dependency>
-      <dependency>
-        <artifactId>equalsverifier</artifactId>
-        <groupId>nl.jqno.equalsverifier</groupId>
-        <scope>test</scope>
-        <version>${equals-verifier.version}</version>
-      </dependency>
-      <dependency>
         <artifactId>javafaker</artifactId>
         <groupId>com.github.javafaker</groupId>
         <version>${java-faker.version}</version>
@@ -404,10 +397,11 @@
     <slf4j.version>2.0.7</slf4j.version>
 
     <!-- Others -->
+    <sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
     <spotbugs-maven-plugin.version>4.7.3.5</spotbugs-maven-plugin.version>
     <spotbugs.version>4.7.3</spotbugs.version>
-    <to-string-verifier.version>1.4.8</to-string-verifier.version>
 
+    <to-string-verifier.version>1.4.8</to-string-verifier.version>
     <to-string-verifier.version>1.4.8</to-string-verifier.version>
   </properties>
 

@@ -3,39 +3,28 @@ package com.felpeto.realestate.domain.vo;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import lombok.Getter;
 
+@Getter
 public enum PropertyKind {
 
-  RESIDENTIAL("single-family",
-      "multi-family",
-      "townhouses",
-      "condominiums",
-      "apartments",
-      "manufactured"),
-  COMMERCIAL("public",
-      "retail",
-      "office",
-      "co-working"),
+  RESIDENTIAL("residential"),
+  COMMERCIAL("commercial"),
   LAND("land"),
-  INDUSTRIAL("heavy-manufacturing",
-      "light-manufacturing",
-      "warehouses",
-      "distribution-facilities");
+  INDUSTRIAL("industrial");
 
   private static final String VALUE_NOT_FOUND = "PropertyKind | Desired value not found";
   private static final Map<String, PropertyKind> VALUE_MAP = new HashMap<>();
 
   static {
-    for (PropertyKind kind : values()) {
-      for (String kindValue : kind.kind) {
-        VALUE_MAP.put(kindValue.toLowerCase(), kind);
-      }
+    for (PropertyKind propertyKind : values()) {
+      VALUE_MAP.put(propertyKind.kind.toLowerCase(), propertyKind);
     }
   }
 
-  private final String[] kind;
+  private final String kind;
 
-  PropertyKind(final String... kind) {
+  PropertyKind(final String kind) {
     this.kind = kind;
   }
 
@@ -47,9 +36,5 @@ public enum PropertyKind {
       throw new IllegalArgumentException(VALUE_NOT_FOUND);
     }
     return result;
-  }
-
-  public String[] getKind() {
-    return kind.clone();
   }
 }

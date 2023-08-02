@@ -5,6 +5,12 @@ import static com.felpeto.realestate.jpa.property.mapper.PropertyEntityMapper.to
 import com.felpeto.realestate.domain.Filter;
 import com.felpeto.realestate.domain.Page;
 import com.felpeto.realestate.domain.property.Property;
+import com.felpeto.realestate.domain.vo.City;
+import com.felpeto.realestate.domain.vo.Country;
+import com.felpeto.realestate.domain.vo.Neighborhood;
+import com.felpeto.realestate.domain.vo.PropertyKind;
+import com.felpeto.realestate.domain.vo.Size;
+import com.felpeto.realestate.domain.vo.State;
 import com.felpeto.realestate.jpa.property.entity.PropertyEntity;
 import com.felpeto.realestate.usecase.property.port.PropertyGateway;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -13,6 +19,7 @@ import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
+import java.util.function.Function;
 
 @Named
 @ApplicationScoped
@@ -59,15 +66,19 @@ public class PropertyRepository implements PropertyGateway {
       final TypedQuery<PropertyEntity> query,
       final Filter filter) {
 
-    query.setParameter("propertyKind", filter.propertyKind().name());
-    query.setParameter("country", filter.country().getValue());
-    query.setParameter("state", filter.state().getValue());
-    query.setParameter("city", filter.city().getValue());
-    query.setParameter("neighborhood", filter.neighborhood().getValue());
-    query.setParameter("size", filter.size().getValue());
-    query.setParameter("garage", filter.garage().getValue());
-    query.setParameter("isRent", filter.isRent());
-    query.setParameter("isSale", filter.isSale());
-    query.setParameter("isFurnished", filter.isFurnished());
+    query.setParameter("propertyKind", map(filter.propertyKind(), PropertyKind::name));
+    query.setParameter("country", map(filter.country(), Country::getValue));
+    query.setParameter("state", map(filter.state(), State::getValue));
+    query.setParameter("city", map(filter.city(), City::getValue));
+    query.setParameter("neighborhood", map(filter.neighborhood(), Neighborhood::getValue));
+    query.setParameter("size", map(filter.size(), Size::getValue));
+    query.setParameter("garage", map(filter.garage(), Size::getValue));
+    query.setParameter("isRent", map(filter.isRent(), Boolean::valueOf));
+    query.setParameter("isSale", map(filter.isSale(), Boolean::valueOf));
+    query.setParameter("isFurnished", map(filter.isFurnished(), Boolean::valueOf));
+  }
+
+  private <T, R> R map(T value, Function<T, R> mapper) {
+    return value == null ? null : mapper.apply(value);
   }
 }

@@ -27,7 +27,7 @@ public class FilterMapper {
         .isRent(filterDto.getIsRent())
         .isSale(filterDto.getIsSale())
         .neighborhood(mapStringToDomainObject(filterDto.getNeighborhood(), Neighborhood::of))
-        .propertyKind(mapDomainObject(filterDto.getPropertyKind(), PropertyKind::of))
+        .propertyKind(mapStringToDomainObject(filterDto.getPropertyKind(), PropertyKind::of))
         .rooms(mapDomainObject(filterDto.getRooms(), Size::of))
         .size(mapDomainObject(filterDto.getSize(), Size::of))
         .state(mapStringToDomainObject(filterDto.getState(), State::of))

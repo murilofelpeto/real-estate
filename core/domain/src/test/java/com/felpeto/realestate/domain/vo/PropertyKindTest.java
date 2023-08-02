@@ -30,10 +30,8 @@ class PropertyKindTest {
   @EnumSource(PropertyKind.class)
   @DisplayName("Given values when call of then return valid property kind")
   void givenValuesWhenCallOfThenReturnValidPropertyKind(PropertyKind propertyKind) {
-    String[] expectedKind = propertyKind.getKind();
-    for (String kind : expectedKind) {
-      assertThat(propertyKind).isEqualTo(PropertyKind.of(kind));
-    }
+    final var expectedKind = propertyKind.getKind();
+    assertThat(propertyKind).isEqualTo(PropertyKind.of(expectedKind));
   }
 
   @ParameterizedTest

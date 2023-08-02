@@ -1,7 +1,7 @@
 package com.felpeto.realestate.jpa.property.entity;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class PropertyEntityBuilder {
@@ -10,7 +10,7 @@ public class PropertyEntityBuilder {
   private UUID uuid;
   private String registration;
   private String propertyKind;
-  private List<String> propertyLeisureItems;
+  private Set<LeisureItemEntity> propertyLeisureItems;
   private String country;
   private String state;
   private String city;
@@ -31,7 +31,7 @@ public class PropertyEntityBuilder {
   private BigDecimal taxes;
   private boolean isCondominium;
   private BigDecimal condominiumPrice;
-  private List<String> condominiumLeisureItems;
+  private Set<LeisureItemEntity> condominiumLeisureItems;
   private String description;
 
   public PropertyEntityBuilder id(final Long id) {
@@ -54,8 +54,9 @@ public class PropertyEntityBuilder {
     return this;
   }
 
-  public PropertyEntityBuilder propertyLeisureItems(final List<String> propertyLeisureItems) {
-    this.propertyLeisureItems = List.copyOf(propertyLeisureItems);
+  public PropertyEntityBuilder propertyLeisureItems(
+      final Set<LeisureItemEntity> propertyLeisureItems) {
+    this.propertyLeisureItems = Set.copyOf(propertyLeisureItems);
     return this;
   }
 
@@ -159,8 +160,9 @@ public class PropertyEntityBuilder {
     return this;
   }
 
-  public PropertyEntityBuilder condominiumLeisureItems(final List<String> condominiumLeisureItems) {
-    this.condominiumLeisureItems = List.copyOf(condominiumLeisureItems);
+  public PropertyEntityBuilder condominiumLeisureItems(
+      final Set<LeisureItemEntity> condominiumLeisureItems) {
+    this.condominiumLeisureItems = Set.copyOf(condominiumLeisureItems);
     return this;
   }
 

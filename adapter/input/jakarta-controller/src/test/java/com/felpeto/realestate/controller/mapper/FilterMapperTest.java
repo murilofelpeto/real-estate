@@ -5,13 +5,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.felpeto.realestate.controller.dto.input.FilterDto;
 import com.felpeto.realestate.domain.vo.PropertyKind;
 import com.github.javafaker.Faker;
-import java.util.Arrays;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class FilterMapperTest {
 
   private final Faker faker = new Faker();
+
+  private static Stream<Arguments> nullOrEmptyFields() {
+    return Stream.of(
+        Arguments.of("", "", null, null, null, null, "", "", null, null, ""),
+        Arguments.of("  ", " ", null, null, null, null, "    ", " ", null, null, "  "),
+        Arguments.of(null, null, null, null, null, null, null, null, null, null, null)
+    );
+  }
 
   @Test
   @DisplayName("Given filterDto when map to filter then return valid filter")
@@ -33,12 +44,53 @@ class FilterMapperTest {
     assertThat(filter.state().getValue()).isEqualTo(filterDto.getState());
   }
 
+  @ParameterizedTest
+  @MethodSource("nullOrEmptyFields")
+  @DisplayName("Given filterDto with null or empty fields when map to filter then return valid filter")
+  void givenFilterDtoWithNullOrEmptyFieldsWhenMapToFilterThenReturnValidFilter(
+      final String city,
+      final String country,
+      final Integer garage,
+      final Boolean isFurnished,
+      final Boolean isRent,
+      final Boolean isSale,
+      final String neighborhood,
+      final String propertyKind,
+      final Integer rooms,
+      final Integer size,
+      final String state) {
+
+    final var filterDto = FilterDto.builder()
+        .city(city)
+        .country(country)
+        .garage(garage)
+        .isFurnished(isFurnished)
+        .isRent(isRent)
+        .isSale(isSale)
+        .neighborhood(neighborhood)
+        .propertyKind(propertyKind)
+        .rooms(rooms)
+        .size(size)
+        .state(state)
+        .build();
+
+    final var filter = FilterMapper.toFilter(filterDto);
+
+    assertThat(filter.city()).isNull();
+    assertThat(filter.country()).isNull();
+    assertThat(filter.garage()).isNull();
+    assertThat(filter.isFurnished()).isNull();
+    assertThat(filter.isRent()).isNull();
+    assertThat(filter.isSale()).isNull();
+    assertThat(filter.neighborhood()).isNull();
+    assertThat(filter.propertyKind()).isNull();
+    assertThat(filter.rooms()).isNull();
+    assertThat(filter.size()).isNull();
+    assertThat(filter.state()).isNull();
+  }
+
   private FilterDto createFilter() {
-    final var propertyKind = Arrays.stream(
-            faker.options().option(PropertyKind.class)
-                .getKind())
-        .findFirst()
-        .get();
+    final var propertyKind = faker.options().option(PropertyKind.class).getKind();
 
     return FilterDto.builder()
         .city(faker.address().city())

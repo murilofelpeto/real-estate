@@ -1,48 +1,60 @@
 package com.felpeto.realestate.jpa.property.entity;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.unmodifiableSet;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @Getter
+@Setter
 @ToString
 @Table(name = "property", indexes = {
-    @Index(name = "idx_property_entity", columnList = "registration, uuid")
-})
+    @Index(name = "idx_property_entity", columnList = "property_id, uuid, registration")})
 @NoArgsConstructor
 public class PropertyEntity {
 
   private static final BigDecimal ONE = BigDecimal.ONE.setScale(2, RoundingMode.HALF_UP);
   @Id
-  @Column(name = "id")
+  @Column(name = "property_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Long propertyId;
 
   @Column(columnDefinition = "BINARY(16)", nullable = false, unique = true)
   private UUID uuid;
 
-  @Column(columnDefinition = "registration", nullable = false, unique = true)
+  @Column(name = "registration", nullable = false, unique = true)
   private String registration;
 
-  @Column(name = "property_leisure_items", nullable = false)
-  private List<String> propertyLeisureItems;
+  @Column(name = "property_kind", nullable = false)
+  private String propertyKind;
+
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(name = "property_leisure_item",
+      joinColumns =
+      @JoinColumn(name = "property_id"),
+      inverseJoinColumns = @JoinColumn(name = "leisure_item_id"))
+  private Set<LeisureItemEntity> condominiumLeisureItems;
 
   @Column(name = "country", nullable = false, length = 100)
   private String country;
@@ -104,21 +116,22 @@ public class PropertyEntity {
   @Column(name = "condominium_price", scale = 2)
   private BigDecimal condominiumPrice;
 
-  @Column(name = "condominium_leisure_items", nullable = false)
-  private List<String> condominiumLeisureItems;
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(name = "property_leisure_item",
+      joinColumns =
+      @JoinColumn(name = "property_id"),
+      inverseJoinColumns = @JoinColumn(name = "leisure_item_id"))
+  private Set<LeisureItemEntity> propertyLeisureItems;
 
   @Column(name = "description", nullable = false)
   private String description;
 
-  @Column(name = "property_kind", nullable = false)
-  private String propertyKind;
-
   public PropertyEntity(
-      final Long id,
+      final Long propertyId,
       final UUID uuid,
       final String registration,
       final String propertyKind,
-      final List<String> propertyLeisureItems,
+      final Set<LeisureItemEntity> propertyLeisureItems,
       final String country,
       final String state,
       final String city,
@@ -139,14 +152,14 @@ public class PropertyEntity {
       final BigDecimal taxes,
       final boolean isCondominium,
       final BigDecimal condominiumPrice,
-      final List<String> condominiumLeisureItems,
+      final Set<LeisureItemEntity> condominiumLeisureItems,
       final String description) {
 
-    this.id = id;
+    this.propertyId = propertyId;
     this.uuid = uuid;
     this.registration = registration;
     this.propertyKind = propertyKind;
-    this.propertyLeisureItems = unmodifiableList(propertyLeisureItems);
+    this.propertyLeisureItems = unmodifiableSet(propertyLeisureItems);
     this.country = country;
     this.state = state;
     this.city = city;
@@ -167,7 +180,7 @@ public class PropertyEntity {
     this.taxes = defaultScale(taxes);
     this.isCondominium = isCondominium;
     this.condominiumPrice = defaultScale(condominiumPrice);
-    this.condominiumLeisureItems = unmodifiableList(condominiumLeisureItems);
+    this.condominiumLeisureItems = unmodifiableSet(condominiumLeisureItems);
     this.description = description;
 
     validateRentOrSale(isRent, isSale);
@@ -179,16 +192,12 @@ public class PropertyEntity {
     return new PropertyEntityBuilder();
   }
 
-  public void setPropertyKind(String propertyKind) {
-    this.propertyKind = propertyKind;
+  public Set<LeisureItemEntity> getCondominiumLeisureItems() {
+    return unmodifiableSet(condominiumLeisureItems);
   }
 
-  public List<String> getCondominiumLeisureItems() {
-    return unmodifiableList(condominiumLeisureItems);
-  }
-
-  public List<String> getPropertyLeisureItems() {
-    return unmodifiableList(propertyLeisureItems);
+  public Set<LeisureItemEntity> getPropertyLeisureItems() {
+    return unmodifiableSet(propertyLeisureItems);
   }
 
   private void validatePrices(
@@ -238,7 +247,7 @@ public class PropertyEntity {
   private void validateCondominiumPrice(final boolean isCondominium) {
     if (!isCondominium) {
       this.condominiumPrice = null;
-      this.condominiumLeisureItems = emptyList();
+      this.condominiumLeisureItems = emptySet();
     }
   }
 

@@ -10,8 +10,8 @@ import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -78,18 +78,95 @@ class PropertyEntityTest {
   }
 
   @Test
-  @DisplayName("Given valid information when build property entity then return valid property entity")
-  void givenValidInformationWhenBuildPropertyEntityThenReturnValidPropertyEntity() {
-    final String propertyKind = Arrays.stream(
-            faker.options().option(PropertyKind.class)
-                .getKind())
-        .findFirst()
-        .get();
+  @DisplayName("Given no args when use no args constructor then return property entity")
+  void givenNoArgsWhenUseNoArgsConstructorThenReturnPropertyEntity() {
+    final var propertyKind = faker.options().option(PropertyKind.class).getKind();
     final var id = faker.number().numberBetween(1L, 100L);
     final var buildingArea = faker.number().numberBetween(1, 100);
     final var city = faker.address().city();
     final var complement = faker.ancient().god();
-    final var condominiumLeisureItem = faker.options().option(LeisureItem.class).getDescription();
+    final var condominiumLeisureItem = createLeisureItemEntity();
+    final var country = faker.address().country();
+    final var description = faker.lorem().paragraph();
+    final int garage = faker.number().numberBetween(1, 10);
+    final var houseNumber = faker.number().numberBetween(1, 9999);
+    final var isFurnished = faker.bool().bool();
+    final var landSize = faker.number().numberBetween(1, 100);
+    final var neighborhood = faker.rickAndMorty().location();
+    final var propertyLeisureItem = createLeisureItemEntity();
+    final var registration = faker.expression(faker.regexify(REGEX));
+    final var rooms = faker.number().numberBetween(1, 100);
+    final var state = faker.address().stateAbbr();
+    final var streetName = faker.address().streetName();
+    final var uuid = UUID.randomUUID();
+    final var zipcode = faker.address().zipCode();
+    final var entity = new PropertyEntity();
+
+    entity.setBuildingArea(buildingArea);
+    entity.setCity(city);
+    entity.setComplement(complement);
+    entity.setCondominium(true);
+    entity.setCondominiumLeisureItems(condominiumLeisureItem);
+    entity.setCondominiumPrice(TEN);
+    entity.setCountry(country);
+    entity.setDescription(description);
+    entity.setFurnished(isFurnished);
+    entity.setGarage(garage);
+    entity.setHouseNumber(houseNumber);
+    entity.setPropertyId(id);
+    entity.setLandSize(landSize);
+    entity.setNeighborhood(neighborhood);
+    entity.setPropertyKind(propertyKind);
+    entity.setPropertyLeisureItems(propertyLeisureItem);
+    entity.setRegistration(registration);
+    entity.setRent(true);
+    entity.setRentPrice(TEN);
+    entity.setRooms(rooms);
+    entity.setSale(true);
+    entity.setSalePrice(TEN);
+    entity.setState(state);
+    entity.setStreetName(streetName);
+    entity.setTaxes(TEN);
+    entity.setUuid(uuid);
+    entity.setZipcode(zipcode);
+
+    assertThat(entity.getBuildingArea()).isEqualTo(buildingArea);
+    assertThat(entity.getCity()).isEqualTo(city);
+    assertThat(entity.getComplement()).isEqualTo(complement);
+    assertThat(entity.getCondominiumLeisureItems()).hasSameElementsAs(condominiumLeisureItem);
+    assertThat(entity.getCondominiumPrice()).isEqualTo(TEN);
+    assertThat(entity.getCountry()).isEqualTo(country);
+    assertThat(entity.getDescription()).isEqualTo(description);
+    assertThat(entity.getGarage()).isEqualTo(garage);
+    assertThat(entity.getHouseNumber()).isEqualTo(houseNumber);
+    assertThat(entity.isCondominium()).isTrue();
+    assertThat(entity.isFurnished()).isEqualTo(isFurnished);
+    assertThat(entity.isRent()).isTrue();
+    assertThat(entity.isSale()).isTrue();
+    assertThat(entity.getLandSize()).isEqualTo(landSize);
+    assertThat(entity.getNeighborhood()).isEqualTo(neighborhood);
+    assertThat(entity.getPropertyKind()).isEqualTo(propertyKind);
+    assertThat(entity.getPropertyLeisureItems()).hasSameElementsAs(propertyLeisureItem);
+    assertThat(entity.getRegistration()).isEqualTo(registration);
+    assertThat(entity.getRentPrice()).isEqualTo(TEN);
+    assertThat(entity.getRooms()).isEqualTo(rooms);
+    assertThat(entity.getSalePrice()).isEqualTo(TEN);
+    assertThat(entity.getState()).isEqualTo(state);
+    assertThat(entity.getStreetName()).isEqualTo(streetName);
+    assertThat(entity.getTaxes()).isEqualTo(TEN);
+    assertThat(entity.getUuid()).isEqualTo(uuid);
+    assertThat(entity.getZipcode()).isEqualTo(zipcode);
+  }
+
+  @Test
+  @DisplayName("Given valid information when build property entity then return valid property entity")
+  void givenValidInformationWhenBuildPropertyEntityThenReturnValidPropertyEntity() {
+    final var propertyKind = faker.options().option(PropertyKind.class).getKind();
+    final var id = faker.number().numberBetween(1L, 100L);
+    final var buildingArea = faker.number().numberBetween(1, 100);
+    final var city = faker.address().city();
+    final var complement = faker.ancient().god();
+    final var condominiumLeisureItem = createLeisureItemEntity();
     final var condominiumPrice = ONE;
     final var country = faker.address().country();
     final var description = faker.lorem().paragraph();
@@ -98,7 +175,7 @@ class PropertyEntityTest {
     final var isFurnished = faker.bool().bool();
     final var landSize = faker.number().numberBetween(1, 100);
     final var neighborhood = faker.rickAndMorty().location();
-    final var propertyLeisureItem = faker.options().option(LeisureItem.class).getDescription();
+    final var propertyLeisureItem = createLeisureItemEntity();
     final var registration = faker.expression(faker.regexify(REGEX));
     final var rentPrice = ONE;
     final var rooms = faker.number().numberBetween(1, 100);
@@ -113,7 +190,7 @@ class PropertyEntityTest {
         .buildingArea(buildingArea)
         .city(city)
         .complement(complement)
-        .condominiumLeisureItems(List.of(condominiumLeisureItem))
+        .condominiumLeisureItems(condominiumLeisureItem)
         .condominiumPrice(condominiumPrice)
         .country(country)
         .description(description)
@@ -126,7 +203,7 @@ class PropertyEntityTest {
         .landSize(landSize)
         .neighborhood(neighborhood)
         .propertyKind(propertyKind)
-        .propertyLeisureItems(List.of(propertyLeisureItem))
+        .propertyLeisureItems(propertyLeisureItem)
         .registration(registration)
         .rentPrice(rentPrice)
         .rooms(rooms)
@@ -141,8 +218,7 @@ class PropertyEntityTest {
     assertThat(entity.getBuildingArea()).isEqualTo(buildingArea);
     assertThat(entity.getCity()).isEqualTo(city);
     assertThat(entity.getComplement()).isEqualTo(complement);
-    assertThat(entity.getCondominiumLeisureItems()).hasSameElementsAs(
-        List.of(condominiumLeisureItem));
+    assertThat(entity.getCondominiumLeisureItems()).hasSameElementsAs(condominiumLeisureItem);
     assertThat(entity.getCondominiumPrice()).isEqualTo(condominiumPrice);
     assertThat(entity.getCountry()).isEqualTo(country);
     assertThat(entity.getDescription()).isEqualTo(description);
@@ -155,7 +231,7 @@ class PropertyEntityTest {
     assertThat(entity.getLandSize()).isEqualTo(landSize);
     assertThat(entity.getNeighborhood()).isEqualTo(neighborhood);
     assertThat(entity.getPropertyKind()).isEqualTo(propertyKind);
-    assertThat(entity.getPropertyLeisureItems()).hasSameElementsAs(List.of(propertyLeisureItem));
+    assertThat(entity.getPropertyLeisureItems()).hasSameElementsAs(propertyLeisureItem);
     assertThat(entity.getRegistration()).isEqualTo(registration);
     assertThat(entity.getRentPrice()).isEqualTo(rentPrice);
     assertThat(entity.getRooms()).isEqualTo(rooms);
@@ -175,16 +251,12 @@ class PropertyEntityTest {
   @Test
   @DisplayName("Given prices higher than One when build property entity then return valid property entity")
   void givenPricesHigherThanOneWhenBuildPropertyEntityThenReturnValidPropertyEntity() {
-    final String propertyKind = Arrays.stream(
-            faker.options().option(PropertyKind.class)
-                .getKind())
-        .findFirst()
-        .get();
+    final var propertyKind = faker.options().option(PropertyKind.class).getKind();
     final var id = faker.number().numberBetween(1L, 100L);
     final var buildingArea = faker.number().numberBetween(1, 100);
     final var city = faker.address().city();
     final var complement = faker.ancient().god();
-    final var condominiumLeisureItem = faker.options().option(LeisureItem.class).getDescription();
+    final var condominiumLeisureItem = createLeisureItemEntity();
     final var condominiumPrice = TEN;
     final var country = faker.address().country();
     final var description = faker.lorem().paragraph();
@@ -193,7 +265,7 @@ class PropertyEntityTest {
     final var isFurnished = faker.bool().bool();
     final var landSize = faker.number().numberBetween(1, 100);
     final var neighborhood = faker.rickAndMorty().location();
-    final var propertyLeisureItem = faker.options().option(LeisureItem.class).getDescription();
+    final var propertyLeisureItem = createLeisureItemEntity();
     final var registration = faker.expression(faker.regexify(REGEX));
     final var rentPrice = TEN;
     final var rooms = faker.number().numberBetween(1, 100);
@@ -208,7 +280,7 @@ class PropertyEntityTest {
         .buildingArea(buildingArea)
         .city(city)
         .complement(complement)
-        .condominiumLeisureItems(List.of(condominiumLeisureItem))
+        .condominiumLeisureItems(condominiumLeisureItem)
         .condominiumPrice(condominiumPrice)
         .country(country)
         .description(description)
@@ -221,7 +293,7 @@ class PropertyEntityTest {
         .landSize(landSize)
         .neighborhood(neighborhood)
         .propertyKind(propertyKind)
-        .propertyLeisureItems(List.of(propertyLeisureItem))
+        .propertyLeisureItems(propertyLeisureItem)
         .registration(registration)
         .rentPrice(rentPrice)
         .rooms(rooms)
@@ -241,16 +313,12 @@ class PropertyEntityTest {
   @Test
   @DisplayName("Given property not for sale and not condominium when build property entity then return valid property entity")
   void givenPropertyNotForSaleAndNotCondominiumWhenBuildPropertyEntityThenReturnValidPropertyEntity() {
-    final String propertyKind = Arrays.stream(
-            faker.options().option(PropertyKind.class)
-                .getKind())
-        .findFirst()
-        .get();
+    final var propertyKind = faker.options().option(PropertyKind.class).getKind();
     final var id = faker.number().numberBetween(1L, 100L);
     final var buildingArea = faker.number().numberBetween(1, 100);
     final var city = faker.address().city();
     final var complement = faker.ancient().god();
-    final var condominiumLeisureItem = faker.options().option(LeisureItem.class).getDescription();
+    final var condominiumLeisureItem = createLeisureItemEntity();
     final var country = faker.address().country();
     final var description = faker.lorem().paragraph();
     final int garage = faker.number().numberBetween(1, 10);
@@ -258,7 +326,7 @@ class PropertyEntityTest {
     final var isFurnished = faker.bool().bool();
     final var landSize = faker.number().numberBetween(1, 100);
     final var neighborhood = faker.rickAndMorty().location();
-    final var propertyLeisureItem = faker.options().option(LeisureItem.class).getDescription();
+    final var propertyLeisureItem = createLeisureItemEntity();
     final var registration = faker.expression(faker.regexify(REGEX));
     final var rooms = faker.number().numberBetween(1, 100);
     final var state = faker.address().stateAbbr();
@@ -271,7 +339,7 @@ class PropertyEntityTest {
         .buildingArea(buildingArea)
         .city(city)
         .complement(complement)
-        .condominiumLeisureItems(List.of(condominiumLeisureItem))
+        .condominiumLeisureItems(condominiumLeisureItem)
         .condominiumPrice(TEN)
         .country(country)
         .description(description)
@@ -284,7 +352,7 @@ class PropertyEntityTest {
         .landSize(landSize)
         .neighborhood(neighborhood)
         .propertyKind(propertyKind)
-        .propertyLeisureItems(List.of(propertyLeisureItem))
+        .propertyLeisureItems(propertyLeisureItem)
         .registration(registration)
         .rentPrice(TEN)
         .rooms(rooms)
@@ -304,21 +372,18 @@ class PropertyEntityTest {
 
     assertThat(entity.isCondominium()).isFalse();
     assertThat(entity.getCondominiumPrice()).isNull();
+    assertThat(entity.getCondominiumLeisureItems()).isEmpty();
   }
 
   @Test
   @DisplayName("Given property not for rent when build property entity then return valid property entity")
   void givenPropertyNotForRentWhenBuildPropertyEntityThenReturnValidPropertyEntity() {
-    final String propertyKind = Arrays.stream(
-            faker.options().option(PropertyKind.class)
-                .getKind())
-        .findFirst()
-        .get();
+    final var propertyKind = faker.options().option(PropertyKind.class).getKind();
     final var id = faker.number().numberBetween(1L, 100L);
     final var buildingArea = faker.number().numberBetween(1, 100);
     final var city = faker.address().city();
     final var complement = faker.ancient().god();
-    final var condominiumLeisureItem = faker.options().option(LeisureItem.class).getDescription();
+    final var condominiumLeisureItem = createLeisureItemEntity();
     final var country = faker.address().country();
     final var description = faker.lorem().paragraph();
     final int garage = faker.number().numberBetween(1, 10);
@@ -326,7 +391,7 @@ class PropertyEntityTest {
     final var isFurnished = faker.bool().bool();
     final var landSize = faker.number().numberBetween(1, 100);
     final var neighborhood = faker.rickAndMorty().location();
-    final var propertyLeisureItem = faker.options().option(LeisureItem.class).getDescription();
+    final var propertyLeisureItem = createLeisureItemEntity();
     final var registration = faker.expression(faker.regexify(REGEX));
     final var rooms = faker.number().numberBetween(1, 100);
     final var state = faker.address().stateAbbr();
@@ -339,7 +404,7 @@ class PropertyEntityTest {
         .buildingArea(buildingArea)
         .city(city)
         .complement(complement)
-        .condominiumLeisureItems(List.of(condominiumLeisureItem))
+        .condominiumLeisureItems(condominiumLeisureItem)
         .condominiumPrice(TEN)
         .country(country)
         .description(description)
@@ -352,7 +417,7 @@ class PropertyEntityTest {
         .landSize(landSize)
         .neighborhood(neighborhood)
         .propertyKind(propertyKind)
-        .propertyLeisureItems(List.of(propertyLeisureItem))
+        .propertyLeisureItems(propertyLeisureItem)
         .registration(registration)
         .rentPrice(TEN)
         .rooms(rooms)
@@ -372,21 +437,18 @@ class PropertyEntityTest {
 
     assertThat(entity.isCondominium()).isTrue();
     assertThat(entity.getCondominiumPrice()).isEqualTo(TEN);
+    assertThat(entity.getCondominiumLeisureItems()).hasSameElementsAs(condominiumLeisureItem);
   }
 
   @Test
   @DisplayName("Given entity without uuid when call pre persist then return entity with uuid")
   void givenEntityWithoutUuidWhenCallPrePersistThenReturnEntityWithUuid() {
-    final String propertyKind = Arrays.stream(
-            faker.options().option(PropertyKind.class)
-                .getKind())
-        .findFirst()
-        .get();
+    final var propertyKind = faker.options().option(PropertyKind.class).getKind();
     final var id = faker.number().numberBetween(1L, 100L);
     final var buildingArea = faker.number().numberBetween(1, 100);
     final var city = faker.address().city();
     final var complement = faker.ancient().god();
-    final var condominiumLeisureItem = faker.options().option(LeisureItem.class).getDescription();
+    final var condominiumLeisureItem = createLeisureItemEntity();
     final var country = faker.address().country();
     final var description = faker.lorem().paragraph();
     final int garage = faker.number().numberBetween(1, 10);
@@ -394,7 +456,7 @@ class PropertyEntityTest {
     final var isFurnished = faker.bool().bool();
     final var landSize = faker.number().numberBetween(1, 100);
     final var neighborhood = faker.rickAndMorty().location();
-    final var propertyLeisureItem = faker.options().option(LeisureItem.class).getDescription();
+    final var propertyLeisureItem = createLeisureItemEntity();
     final var registration = faker.expression(faker.regexify(REGEX));
     final var rooms = faker.number().numberBetween(1, 100);
     final var state = faker.address().stateAbbr();
@@ -406,7 +468,7 @@ class PropertyEntityTest {
         .buildingArea(buildingArea)
         .city(city)
         .complement(complement)
-        .condominiumLeisureItems(List.of(condominiumLeisureItem))
+        .condominiumLeisureItems(condominiumLeisureItem)
         .condominiumPrice(TEN)
         .country(country)
         .description(description)
@@ -419,7 +481,7 @@ class PropertyEntityTest {
         .landSize(landSize)
         .neighborhood(neighborhood)
         .propertyKind(propertyKind)
-        .propertyLeisureItems(List.of(propertyLeisureItem))
+        .propertyLeisureItems(propertyLeisureItem)
         .registration(registration)
         .rentPrice(TEN)
         .rooms(rooms)
@@ -450,16 +512,12 @@ class PropertyEntityTest {
       final BigDecimal salePrice,
       final String message) {
 
-    final String propertyKind = Arrays.stream(
-            faker.options().option(PropertyKind.class)
-                .getKind())
-        .findFirst()
-        .get();
+    final var propertyKind = faker.options().option(PropertyKind.class).getKind();
     final var id = faker.number().numberBetween(1L, 100L);
     final var buildingArea = faker.number().numberBetween(1, 100);
     final var city = faker.address().city();
     final var complement = faker.ancient().god();
-    final var condominiumLeisureItem = faker.options().option(LeisureItem.class).getDescription();
+    final var condominiumLeisureItem = createLeisureItemEntity();
     final var country = faker.address().country();
     final var description = faker.lorem().paragraph();
     final int garage = faker.number().numberBetween(1, 10);
@@ -467,7 +525,7 @@ class PropertyEntityTest {
     final var isFurnished = faker.bool().bool();
     final var landSize = faker.number().numberBetween(1, 100);
     final var neighborhood = faker.rickAndMorty().location();
-    final var propertyLeisureItem = faker.options().option(LeisureItem.class).getDescription();
+    final var propertyLeisureItem = createLeisureItemEntity();
     final var registration = faker.expression(faker.regexify(REGEX));
     final var rooms = faker.number().numberBetween(1, 100);
     final var state = faker.address().stateAbbr();
@@ -480,7 +538,7 @@ class PropertyEntityTest {
         .buildingArea(buildingArea)
         .city(city)
         .complement(complement)
-        .condominiumLeisureItems(List.of(condominiumLeisureItem))
+        .condominiumLeisureItems(condominiumLeisureItem)
         .condominiumPrice(condominiumPrice)
         .country(country)
         .description(description)
@@ -493,7 +551,7 @@ class PropertyEntityTest {
         .landSize(landSize)
         .neighborhood(neighborhood)
         .propertyKind(propertyKind)
-        .propertyLeisureItems(List.of(propertyLeisureItem))
+        .propertyLeisureItems(propertyLeisureItem)
         .registration(registration)
         .rentPrice(rentPrice)
         .rooms(rooms)
@@ -506,5 +564,18 @@ class PropertyEntityTest {
         .build())
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage(message);
+  }
+
+  private Set<LeisureItemEntity> createLeisureItemEntity() {
+    final var items = new HashSet<LeisureItemEntity>();
+    for (int i = 0; i < 10; i++) {
+      final var leisureItemEntity = LeisureItemEntity.builder()
+          .item(faker.options().option(LeisureItem.class).getDescription())
+          .leisureItemId(faker.number().numberBetween(1L, 100L))
+          .uuid(UUID.randomUUID())
+          .build();
+      items.add(leisureItemEntity);
+    }
+    return items;
   }
 }

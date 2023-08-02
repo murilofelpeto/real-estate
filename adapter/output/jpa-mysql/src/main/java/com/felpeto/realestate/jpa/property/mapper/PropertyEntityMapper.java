@@ -20,8 +20,10 @@ import com.felpeto.realestate.domain.vo.Size;
 import com.felpeto.realestate.domain.vo.State;
 import com.felpeto.realestate.domain.vo.StreetName;
 import com.felpeto.realestate.domain.vo.ZipCode;
+import com.felpeto.realestate.jpa.property.entity.LeisureItemEntity;
 import com.felpeto.realestate.jpa.property.entity.PropertyEntity;
 import java.util.List;
+import java.util.Set;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
@@ -69,8 +71,11 @@ public class PropertyEntityMapper {
     return PropertyKind.of(propertyKind);
   }
 
-  private static List<LeisureItem> toLeisureItems(final List<String> propertyLeisureItems) {
-    return propertyLeisureItems.stream().map(LeisureItem::of).toList();
+  private static List<LeisureItem> toLeisureItems(
+      final Set<LeisureItemEntity> propertyLeisureItems) {
+    return propertyLeisureItems.stream()
+        .map(LeisureItemEntity::getItem)
+        .map(LeisureItem::of).toList();
   }
 
   private static Condominium toCondominium(final PropertyEntity entity) {

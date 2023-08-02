@@ -1,6 +1,7 @@
 package com.felpeto.realestate.jpa.property;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -18,13 +19,15 @@ import com.felpeto.realestate.domain.vo.Neighborhood;
 import com.felpeto.realestate.domain.vo.PropertyKind;
 import com.felpeto.realestate.domain.vo.Size;
 import com.felpeto.realestate.domain.vo.State;
+import com.felpeto.realestate.jpa.property.entity.LeisureItemEntity;
 import com.felpeto.realestate.jpa.property.entity.PropertyEntity;
 import com.github.javafaker.Faker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import java.math.BigDecimal;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -131,22 +134,84 @@ class PropertyRepositoryTest {
 
   }
 
-  private PropertyEntity createEntity() {
-    final String propertyKind = Arrays.stream(
-            faker.options().option(PropertyKind.class)
-                .getKind())
-        .findFirst()
-        .get();
+  @Test
+  @DisplayName("Given page and empty filter when call findAll then return list of properties")
+  void givenPageAndEmptyFilterWhenCallFindAllThenReturnListOfProperties() {
+    final var limit = faker.number().numberBetween(5, 30);
+    final var offset = faker.number().numberBetween(3, 29);
+    final var page = Page.from(limit, offset, "+total_value");
+    final var filter = Filter.builder()
+        .city(null)
+        .country(null)
+        .garage(null)
+        .isFurnished(null)
+        .isRent(null)
+        .isSale(null)
+        .neighborhood(null)
+        .propertyKind(null)
+        .rooms(null)
+        .size(null)
+        .state(null)
+        .build();
 
+    final var entity = createEntity();
+    final var selectProperty = SELECT_FILTERED_PROPERTY
+        .replace("{sort}", page.getSort())
+        .replace("{sortMode}", page.getSortMode().name());
+
+    when(entityManager.createQuery(selectProperty, PropertyEntity.class))
+        .thenReturn(propertyEntityQuery);
+    when(propertyEntityQuery.setParameter("propertyKind", null))
+        .thenReturn(propertyEntityQuery);
+    when(propertyEntityQuery.setParameter("country", null))
+        .thenReturn(propertyEntityQuery);
+    when(propertyEntityQuery.setParameter("state", null))
+        .thenReturn(propertyEntityQuery);
+    when(propertyEntityQuery.setParameter("city", null))
+        .thenReturn(propertyEntityQuery);
+    when(propertyEntityQuery.setParameter("neighborhood", null))
+        .thenReturn(propertyEntityQuery);
+    when(propertyEntityQuery.setParameter("size", null))
+        .thenReturn(propertyEntityQuery);
+    when(propertyEntityQuery.setParameter("isRent", null))
+        .thenReturn(propertyEntityQuery);
+    when(propertyEntityQuery.setParameter("isSale", null))
+        .thenReturn(propertyEntityQuery);
+    when(propertyEntityQuery.setParameter("isFurnished", null))
+        .thenReturn(propertyEntityQuery);
+    when(propertyEntityQuery.setParameter("garage", null))
+        .thenReturn(propertyEntityQuery);
+    when(propertyEntityQuery.setFirstResult(page.getOffset() * page.getLimit()))
+        .thenReturn(propertyEntityQuery);
+    when(propertyEntityQuery.setMaxResults(page.getLimit()))
+        .thenReturn(propertyEntityQuery);
+
+    when(propertyEntityQuery.getResultList()).thenReturn(List.of(entity));
+
+    final var properties = propertyRepository.findAll(page, filter);
+
+    assertThat(properties).hasSize(1);
+
+    verify(entityManager).createQuery(selectProperty, PropertyEntity.class);
+    verify(propertyEntityQuery, times(10)).setParameter(anyString(), any());
+    verify(propertyEntityQuery).setMaxResults(page.getLimit());
+    verify(propertyEntityQuery).setFirstResult(page.getOffset() * page.getLimit());
+    verifyNoMoreInteractions(entityManager, propertyEntityQuery);
+
+  }
+
+  private PropertyEntity createEntity() {
+    final var propertyKind = faker.options().option(PropertyKind.class).getKind();
     final boolean isRent = faker.bool().bool();
+    final var condominiumLeisureItems = createLeisureItemEntity();
+    final var propertyLeisureItems = createLeisureItemEntity();
 
     return PropertyEntity.builder()
         .id(faker.number().numberBetween(1L, 100L))
         .buildingArea(faker.number().numberBetween(1, 100))
         .city(faker.address().city())
         .complement(faker.ancient().god())
-        .condominiumLeisureItems(
-            List.of(faker.options().option(LeisureItem.class).getDescription()))
+        .condominiumLeisureItems(condominiumLeisureItems)
         .condominiumPrice(BigDecimal.valueOf(faker.number().randomDouble(2, 1, 100)))
         .country(faker.address().country())
         .description(faker.lorem().paragraph())
@@ -159,7 +224,7 @@ class PropertyRepositoryTest {
         .landSize(faker.number().numberBetween(1, 100))
         .neighborhood(faker.rickAndMorty().location())
         .propertyKind(propertyKind)
-        .propertyLeisureItems(List.of(faker.options().option(LeisureItem.class).getDescription()))
+        .propertyLeisureItems(propertyLeisureItems)
         .registration(faker.expression(faker.regexify(REGEX)))
         .rentPrice(BigDecimal.valueOf(faker.number().randomDouble(2, 1, 100)))
         .rooms(faker.number().numberBetween(1, 100))
@@ -172,5 +237,16 @@ class PropertyRepositoryTest {
         .build();
   }
 
-
+  private Set<LeisureItemEntity> createLeisureItemEntity() {
+    final var items = new HashSet<LeisureItemEntity>();
+    for (int i = 0; i < 10; i++) {
+      final var leisureItemEntity = LeisureItemEntity.builder()
+          .item(faker.options().option(LeisureItem.class).getDescription())
+          .leisureItemId(faker.number().numberBetween(1L, 100L))
+          .uuid(UUID.randomUUID())
+          .build();
+      items.add(leisureItemEntity);
+    }
+    return items;
+  }
 }
