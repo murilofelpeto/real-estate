@@ -1,8 +1,8 @@
 package com.felpeto.realestate.controller.dto.output;
 
+import com.felpeto.realestate.controller.dto.PropertyKindDto;
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +20,7 @@ import lombok.ToString;
 public class PropertyResponseDto {
 
   private UUID id;
-  private String propertyKind;
+  private PropertyKindDto propertyKind;
   private String country;
   private String state;
   private String city;
@@ -42,7 +42,6 @@ public class PropertyResponseDto {
   private BigDecimal condominiumValue;
   private Integer garage;
   private String description;
-  private Map<String, List<String>> propertyItems;
-  private Map<String, List<String>> condominiumItems;
-  private Map<String, List<String>> images;
+  private Set<LeisureItemsResponseDto> propertyItems;
+  private Set<LeisureItemsResponseDto> condominiumItems;
 }

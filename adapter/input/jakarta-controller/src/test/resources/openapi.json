@@ -226,6 +226,22 @@
           }
         }
       },
+      "LeisureItemsResponseDto" : {
+        "type" : "object",
+        "properties" : {
+          "availability" : {
+            "type" : "string",
+            "enum" : [ "AVAILABLE", "UNAVAILABLE" ]
+          },
+          "items" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
       "PropertyResponseDto" : {
         "type" : "object",
         "properties" : {
@@ -234,7 +250,8 @@
             "format" : "uuid"
           },
           "propertyKind" : {
-            "type" : "string"
+            "type" : "string",
+            "enum" : [ "RESIDENTIAL", "COMMERCIAL", "LAND", "INDUSTRIAL" ]
           },
           "country" : {
             "type" : "string"
@@ -305,30 +322,17 @@
             "type" : "string"
           },
           "propertyItems" : {
-            "type" : "object",
-            "additionalProperties" : {
-              "type" : "array",
-              "items" : {
-                "type" : "string"
-              }
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/LeisureItemsResponseDto"
             }
           },
           "condominiumItems" : {
-            "type" : "object",
-            "additionalProperties" : {
-              "type" : "array",
-              "items" : {
-                "type" : "string"
-              }
-            }
-          },
-          "images" : {
-            "type" : "object",
-            "additionalProperties" : {
-              "type" : "array",
-              "items" : {
-                "type" : "string"
-              }
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/LeisureItemsResponseDto"
             }
           }
         }

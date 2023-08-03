@@ -1,14 +1,19 @@
 package com.felpeto.realestate.controller.mapper;
 
-import static java.util.Collections.emptyMap;
+import static com.felpeto.realestate.controller.dto.output.Availability.AVAILABLE;
+import static com.felpeto.realestate.controller.dto.output.Availability.UNAVAILABLE;
 import static lombok.AccessLevel.PRIVATE;
 
+import com.felpeto.realestate.controller.dto.PropertyKindDto;
+import com.felpeto.realestate.controller.dto.output.LeisureItemsResponseDto;
 import com.felpeto.realestate.controller.dto.output.PropertyResponseDto;
 import com.felpeto.realestate.domain.property.Property;
 import com.felpeto.realestate.domain.vo.LeisureItem;
+import com.felpeto.realestate.domain.vo.PropertyKind;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
@@ -25,8 +30,8 @@ public class PropertyDtoMapper {
     final var sale = property.sale();
     final var size = property.size();
 
-    final var propertyItems = toPropertyItems(property);
-    final var condominiumItems = toCondominiumItems(property);
+    final var propertyItems = toLeisureItemsResponseDto(property.items());
+    final var condominiumItems = toLeisureItemsResponseDto(condominium.getItems());
 
     return PropertyResponseDto.builder()
         .id(property.uuid())
@@ -38,7 +43,6 @@ public class PropertyDtoMapper {
         .country(address.country().getValue())
         .description(property.description())
         .garage(size.garage().getValue())
-        .images(emptyMap())
         .isCondominium(condominium.isCondominium())
         .isFurnished(property.isFurnished())
         .isRent(rent.isRent())
@@ -47,7 +51,7 @@ public class PropertyDtoMapper {
         .neighborhood(address.neighborhood().getValue())
         .number(address.number().getValue())
         .propertyItems(propertyItems)
-        .propertyKind(property.propertyKind().name())
+        .propertyKind(toPropertyKindDto(property.propertyKind()))
         .rentPrice(rent.isRent() ? rent.getPrice().getValue() : null)
         .rooms(size.rooms().getValue())
         .salePrice(sale.isSale() ? sale.getPrice().getValue() : null)
@@ -58,39 +62,33 @@ public class PropertyDtoMapper {
         .build();
   }
 
-  private static Map<String, List<String>> toPropertyItems(final Property property) {
-    final var propertyAvailableItems = property.items()
-        .stream()
-        .map(LeisureItem::getDescription)
-        .toList();
-
-    final var propertyUnavailableItems = Stream.concat(
-            property.items().stream(),
-            LeisureItem.streamValues())
-        .distinct()
-        .map(LeisureItem::getDescription)
-        .toList();
-
-    return Map.of(
-        "Available", propertyAvailableItems,
-        "Unavailable", propertyUnavailableItems);
+  private static PropertyKindDto toPropertyKindDto(final PropertyKind propertyKind) {
+    return PropertyKindDto.valueOf(propertyKind.name());
   }
 
-  private static Map<String, List<String>> toCondominiumItems(final Property property) {
-    final var condominiumAvailableItems = property.condominium()
-        .getItems()
-        .stream()
-        .map(LeisureItem::getDescription)
-        .toList();
+  private static Set<LeisureItemsResponseDto> toLeisureItemsResponseDto(
+      final List<LeisureItem> leisureItems) {
 
-    final var condominiumUnavailableItems = Stream.concat(
-            property.condominium().getItems().stream(),
-            LeisureItem.streamValues())
-        .distinct()
+    final var availableItems = leisureItems.stream()
         .map(LeisureItem::getDescription)
-        .toList();
+        .collect(Collectors.toCollection(HashSet::new));
 
-    return Map.of("Available", condominiumAvailableItems,
-        "Unavailable", condominiumUnavailableItems);
+    final var unavailableItems = LeisureItem.streamValues()
+        .map(LeisureItem::getDescription)
+        .collect(Collectors.toCollection(HashSet::new));
+
+    unavailableItems.removeAll(availableItems);
+
+    final var availableResponse = LeisureItemsResponseDto.builder()
+        .availability(AVAILABLE)
+        .items(availableItems)
+        .build();
+
+    final var unavailableResponse = LeisureItemsResponseDto.builder()
+        .availability(UNAVAILABLE)
+        .items(unavailableItems)
+        .build();
+
+    return Set.of(availableResponse, unavailableResponse);
   }
 }

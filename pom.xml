@@ -142,10 +142,6 @@
           <targetClasses>
             <param>${mutation.scan.code}</param>
           </targetClasses>
-          <!--<excludedClasses>
-              <param>com.felpeto.rent.adapter.input.controller.config.ObjectMapperConfiguration</param>
-              <param>com.felpeto.rent.adapter.output.mysql.repository.PropertyRepository</param>
-          </excludedClasses>-->
           <targetTests>
             <param>${mutation.scan.test}</param>
           </targetTests>

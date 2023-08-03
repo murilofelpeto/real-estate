@@ -1,8 +1,11 @@
 package com.felpeto.realestate.controller.mapper;
 
+import static com.felpeto.realestate.controller.dto.output.Availability.AVAILABLE;
+import static com.felpeto.realestate.controller.dto.output.Availability.UNAVAILABLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.list;
 
+import com.felpeto.realestate.controller.dto.output.LeisureItemsResponseDto;
 import com.felpeto.realestate.controller.dto.output.PropertyResponseDto;
 import com.felpeto.realestate.domain.property.Property;
 import com.felpeto.realestate.domain.property.PropertySize;
@@ -24,10 +27,11 @@ import com.felpeto.realestate.domain.vo.StreetName;
 import com.felpeto.realestate.domain.vo.ZipCode;
 import com.github.javafaker.Faker;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -36,40 +40,30 @@ class PropertyDtoMapperTest {
   private static final String REGEX = "[0-9]{5}\\.[0-9]{1}\\.[0-9]{7}-[0-9]{2}";
   private final Faker faker = new Faker();
 
-  private static Map<String, List<String>> toCondominiumItems(final Property property) {
-    final var condominiumAvailableItems = property.condominium()
-        .getItems()
-        .stream()
+  private static Set<LeisureItemsResponseDto> toLeisureItemsResponseDto(
+      final List<LeisureItem> leisureItems) {
+
+    final var availableItems = leisureItems.stream()
         .map(LeisureItem::getDescription)
-        .toList();
+        .collect(Collectors.toCollection(HashSet::new));
 
-    final var condominiumUnavailableItems = Stream.concat(
-            property.condominium().getItems().stream(),
-            LeisureItem.streamValues())
-        .distinct()
+    final var unavailableItems = LeisureItem.streamValues()
         .map(LeisureItem::getDescription)
-        .toList();
+        .collect(Collectors.toCollection(HashSet::new));
 
-    return Map.of("Available", condominiumAvailableItems,
-        "Unavailable", condominiumUnavailableItems);
-  }
+    unavailableItems.removeAll(availableItems);
 
-  private static Map<String, List<String>> toPropertyItems(final Property property) {
-    final var propertyAvailableItems = property.items()
-        .stream()
-        .map(LeisureItem::getDescription)
-        .toList();
+    final var availableResponse = LeisureItemsResponseDto.builder()
+        .availability(AVAILABLE)
+        .items(availableItems)
+        .build();
 
-    final var propertyUnavailableItems = Stream.concat(
-            property.items().stream(),
-            LeisureItem.streamValues())
-        .distinct()
-        .map(LeisureItem::getDescription)
-        .toList();
+    final var unavailableResponse = LeisureItemsResponseDto.builder()
+        .availability(UNAVAILABLE)
+        .items(unavailableItems)
+        .build();
 
-    return Map.of(
-        "Available", propertyAvailableItems,
-        "Unavailable", propertyUnavailableItems);
+    return Set.of(availableResponse, unavailableResponse);
   }
 
   @Test
@@ -81,21 +75,26 @@ class PropertyDtoMapperTest {
     final var condominium = property.condominium();
     final var rent = property.rent();
     final var sale = property.sale();
-    final var propertyItems = toPropertyItems(property);
-    final var condominiumItems = toCondominiumItems(property);
+
+    final var propertyItems = toLeisureItemsResponseDto(property.items());
+    final Set<LeisureItemsResponseDto> condominiumItems = toLeisureItemsResponseDto(
+        condominium.getItems());
 
     final var response = PropertyDtoMapper.toPropertyResponseDto(property);
-    
+
     assertThat(response.getBuildingArea()).isEqualTo(propertySize.buildingArea().getValue());
     assertThat(response.getCity()).isEqualTo(address.city().getValue());
     assertThat(response.getComplement()).isEqualTo(address.complement());
-    assertThat(response.getCondominiumItems()).isNotEmpty().containsAllEntriesOf(condominiumItems);
+
+    assertThat(response.getCondominiumItems())
+        .isNotEmpty()
+        .containsExactlyInAnyOrderElementsOf(condominiumItems);
+
     assertThat(response.getCondominiumValue()).isEqualTo(condominium.getPrice().getValue());
     assertThat(response.getCountry()).isEqualTo(address.country().getValue());
     assertThat(response.getDescription()).isEqualTo(property.description());
     assertThat(response.getGarage()).isEqualTo(propertySize.garage().getValue());
     assertThat(response.getId()).isEqualTo(property.uuid());
-    assertThat(response.getImages()).isEmpty();
     assertThat(response.getIsCondominium()).isEqualTo(condominium.isCondominium());
     assertThat(response.getIsFurnished()).isEqualTo(property.isFurnished());
     assertThat(response.getIsRent()).isEqualTo(rent.isRent());
@@ -103,8 +102,8 @@ class PropertyDtoMapperTest {
     assertThat(response.getLandSize()).isEqualTo(propertySize.landSize().getValue());
     assertThat(response.getNeighborhood()).isEqualTo(address.neighborhood().getValue());
     assertThat(response.getNumber()).isEqualTo(address.number().getValue());
-    assertThat(response.getPropertyItems()).containsAllEntriesOf(propertyItems);
-    assertThat(response.getPropertyKind()).isEqualTo(property.propertyKind().name());
+    assertThat(response.getPropertyItems()).containsExactlyInAnyOrderElementsOf(propertyItems);
+    assertThat(response.getPropertyKind().name()).isEqualTo(property.propertyKind().name());
     assertThat(response.getRentPrice()).isEqualTo(rent.getPrice().getValue());
     assertThat(response.getRooms()).isEqualTo(propertySize.rooms().getValue());
     assertThat(response.getSalePrice()).isEqualTo(sale.getPrice().getValue());
@@ -121,12 +120,16 @@ class PropertyDtoMapperTest {
     final var condominium = property.condominium();
     final var rent = property.rent();
     final var sale = property.sale();
-    final var condominiumItems = toCondominiumItems(property);
+
+    final var condominiumItems = toLeisureItemsResponseDto(condominium.getItems());
 
     final var response = PropertyDtoMapper.toPropertyResponseDto(property);
 
+    assertThat(response.getCondominiumItems())
+        .isNotEmpty()
+        .containsExactlyInAnyOrderElementsOf(condominiumItems);
+
     assertThat(response.getIsCondominium()).isEqualTo(condominium.isCondominium());
-    assertThat(response.getCondominiumItems()).isNotEmpty().containsAllEntriesOf(condominiumItems);
     assertThat(response.getCondominiumValue()).isNull();
     assertThat(response.getIsRent()).isEqualTo(rent.isRent());
     assertThat(response.getIsSale()).isEqualTo(sale.isSale());
