@@ -15,6 +15,13 @@ public final class Registration {
   private static final String REGEX = "^[0-9]{5}.[0-9]{1}.[0-9]{7}-[0-9]{2}$";
   private static final Pattern PATTERN = Pattern.compile(REGEX);
 
+  private static final String INVALID_REGISTRATION_FORMAT = "Invalid registration format";
+  private static final String FIELD = "value";
+  private static final String TARGET = Registration.class.getSimpleName();
+  private static final String VIOLATION_MESSAGE =
+      "You must provide a registration following the pattern: " + REGEX;
+  private static final String MANDATORY_FIELD = "Registration is mandatory";
+
   private final String value;
 
   private Registration(final String value) {
@@ -23,11 +30,15 @@ public final class Registration {
 
   public static Registration of(final String value) {
     if (StringUtils.isBlank(value)) {
-      throw new IllegalArgumentException("Registration is mandatory");
+      throw new IllegalArgumentException(MANDATORY_FIELD);
     }
 
     if (!PATTERN.matcher(value).matches()) {
-      throw new InvalidFormatException("Invalid registration format");
+      throw new InvalidFormatException(INVALID_REGISTRATION_FORMAT,
+          FIELD,
+          TARGET,
+          FIELD,
+          VIOLATION_MESSAGE);
     }
 
     return new Registration(value.trim());

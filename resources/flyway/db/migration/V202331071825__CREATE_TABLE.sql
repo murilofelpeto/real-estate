@@ -52,6 +52,6 @@ alter table property add constraint UK_constraint_property_registration unique (
 
 alter table property add constraint UK_constraint_property_uuid unique (uuid);
 
-alter table property_leisure_item add constraint FKrtnoonbi79bq4729htd02hisl foreign key (leisure_item_id) references leisure_item (leisure_item_id);
+alter table property_leisure_item add constraint FK_leisure_item_id foreign key (leisure_item_id) references leisure_item (leisure_item_id);
 
-alter table property_leisure_item add constraint FK_property_id_leisure_item foreign key (property_id) ;
+alter table property_leisure_item add constraint FK_property_id foreign key (property_id) ;

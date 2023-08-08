@@ -1,8 +1,13 @@
 package com.felpeto.realestate.domain.exception;
 
-public class InvalidPropertyNumberException extends RuntimeException {
+public final class InvalidPropertyNumberException extends UnprocessableEntityException {
 
-  public InvalidPropertyNumberException(final String message) {
-    super(message);
+  public InvalidPropertyNumberException(final String message,
+      final String parameter,
+      final String target,
+      final String field,
+      final String violationMessage) {
+
+    super(message, parameter, target, field, violationMessage);
   }
 }

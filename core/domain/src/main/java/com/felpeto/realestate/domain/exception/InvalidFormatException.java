@@ -1,8 +1,13 @@
 package com.felpeto.realestate.domain.exception;
 
-public class InvalidFormatException extends RuntimeException {
+public final class InvalidFormatException extends UnprocessableEntityException {
 
-  public InvalidFormatException(final String message) {
-    super(message);
+  public InvalidFormatException(final String message,
+      final String parameter,
+      final String target,
+      final String field,
+      final String violationMessage) {
+
+    super(message, parameter, target, field, violationMessage);
   }
 }
