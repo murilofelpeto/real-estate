@@ -4,14 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.felpeto.realestate.domain.vo.City;
 import com.felpeto.realestate.domain.vo.Country;
-import com.felpeto.realestate.domain.vo.Money;
 import com.felpeto.realestate.domain.vo.Neighborhood;
 import com.felpeto.realestate.domain.vo.PropertyKind;
 import com.felpeto.realestate.domain.vo.Size;
 import com.felpeto.realestate.domain.vo.State;
 import com.github.javafaker.Faker;
 import com.jparams.verifier.tostring.ToStringVerifier;
-import java.math.BigDecimal;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +47,6 @@ class FilterTest {
     final var isRent = faker.bool().bool();
     final var isSale = faker.bool().bool();
     final var isFurnished = faker.bool().bool();
-    final var totalPrice = Money.of(BigDecimal.valueOf(faker.number().randomDouble(2, 1, 100)));
     final var garage = Size.of(faker.number().numberBetween(1, 10));
 
     final var filter = Filter.builder()

@@ -2,7 +2,7 @@ package com.felpeto.realestate.domain.vo;
 
 import static java.util.Objects.requireNonNull;
 
-import com.felpeto.realestate.domain.exception.InvalidPropertyNumberException;
+import com.felpeto.realestate.domain.exception.InvalidNumberLimitException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -13,7 +13,7 @@ import lombok.ToString;
 public final class PropertyNumber {
 
   private static final String INVALID_NUMBER = "Property number must be greater than 0";
-  private static final String FIELD = "Property Number";
+  private static final String FIELD = "PropertyNumber.value";
   private static final String TARGET = PropertyNumber.class.getSimpleName();
   private static final String VIOLATION_MESSAGE = "When you build a Property number, you must provide a number greater than 0";
   private final Integer value;
@@ -26,7 +26,7 @@ public final class PropertyNumber {
     requireNonNull(value, "Property number is mandatory");
 
     if (value <= 0) {
-      throw new InvalidPropertyNumberException(INVALID_NUMBER,
+      throw new InvalidNumberLimitException(INVALID_NUMBER,
           FIELD,
           TARGET,
           FIELD,

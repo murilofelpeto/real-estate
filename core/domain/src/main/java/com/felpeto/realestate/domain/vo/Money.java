@@ -1,5 +1,8 @@
 package com.felpeto.realestate.domain.vo;
 
+import static java.text.MessageFormat.format;
+
+import com.felpeto.realestate.domain.exception.InvalidNumberLimitException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
@@ -9,6 +12,11 @@ import lombok.ToString;
 @Getter
 @ToString
 public final class Money {
+
+  private static final String INVALID_NUMBER = "value must be greater than or equal to 1: {0}";
+  private static final String FIELD = "Money.value";
+  private static final String TARGET = Money.class.getSimpleName();
+  private static final String VIOLATION_MESSAGE = "When you build a Money, you must provide a number greater or equal than 1";
 
   private final BigDecimal value;
 
@@ -21,8 +29,12 @@ public final class Money {
       return new Money(null);
     }
 
-    if (BigDecimal.ONE.compareTo(value) > 0) {
-      throw new IllegalArgumentException("value must be greater than or equal to 1: " + value);
+    if (value.compareTo(BigDecimal.ONE) < 0) {
+      throw new InvalidNumberLimitException(format(INVALID_NUMBER, value),
+          FIELD,
+          TARGET,
+          FIELD,
+          VIOLATION_MESSAGE);
     }
     return new Money(value.setScale(2, RoundingMode.HALF_UP));
   }

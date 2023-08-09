@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.felpeto.realestate.controller.handler.dto.ErrorDetails;
 import com.felpeto.realestate.controller.handler.dto.ErrorResponseDto;
 import com.felpeto.realestate.domain.exception.InvalidFormatException;
-import com.felpeto.realestate.domain.exception.InvalidPropertyNumberException;
+import com.felpeto.realestate.domain.exception.InvalidNumberLimitException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ class UnprocessableEntityExceptionMapperTest {
   @DisplayName("Given InvalidPropertyNumberException when map toResponse then return BAD_REQUEST")
   void givenInvalidPropertyNumberExceptionWhenMapToResponseThenReturnBadRequest() {
     final var message = "InvalidFormatException";
-    final var exception = new InvalidPropertyNumberException(message, "parameter", "target",
+    final var exception = new InvalidNumberLimitException(message, "parameter", "target",
         "field",
         "violation message");
 

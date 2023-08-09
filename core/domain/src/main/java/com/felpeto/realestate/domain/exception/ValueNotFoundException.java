@@ -1,8 +1,8 @@
 package com.felpeto.realestate.domain.exception;
 
-public final class InvalidPropertyNumberException extends UnprocessableEntityException {
+public final class ValueNotFoundException extends UnprocessableEntityException {
 
-  public InvalidPropertyNumberException(final String message,
+  public ValueNotFoundException(final String message,
       final String parameter,
       final String target,
       final String field,

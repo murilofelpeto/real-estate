@@ -1,5 +1,9 @@
 package com.felpeto.realestate.domain.vo;
 
+import static java.text.MessageFormat.format;
+
+import com.felpeto.realestate.domain.exception.InvalidStringFormatException;
+import com.felpeto.realestate.domain.exception.ValueNotFoundException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,6 +54,11 @@ public enum LeisureItem {
   private static final Map<String, LeisureItem> ITEM_BY_DESCRIPTION = new HashMap<>();
 
   private static final LeisureItem[] VALUES = values();
+  private static final String MANDATORY_FIELD = "description is mandatory";
+  private static final String FIELD = "LeisureItem.description";
+  private static final String TARGET = LeisureItem.class.getSimpleName();
+  private static final String VIOLATION_MESSAGE = "You must inform a valid description for leisure item";
+  private static final String DESCRIPTION_NOT_FOUND = "description not found: {0}";
 
   static {
     Arrays.stream(VALUES)
@@ -64,10 +73,18 @@ public enum LeisureItem {
 
   public static LeisureItem of(final String description) {
     if (StringUtils.isBlank(description)) {
-      throw new IllegalArgumentException("description is mandatory");
+      throw new InvalidStringFormatException(MANDATORY_FIELD,
+          FIELD,
+          TARGET,
+          FIELD,
+          VIOLATION_MESSAGE);
     }
     if (!ITEM_BY_DESCRIPTION.containsKey(description.toLowerCase())) {
-      throw new IllegalArgumentException("description not found: " + description);
+      throw new ValueNotFoundException(format(DESCRIPTION_NOT_FOUND, description),
+          FIELD,
+          TARGET,
+          FIELD,
+          VIOLATION_MESSAGE);
     }
     return ITEM_BY_DESCRIPTION.get(description.toLowerCase());
   }

@@ -1,8 +1,9 @@
 package com.felpeto.realestate.domain.vo;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
 
+import com.felpeto.realestate.domain.exception.InvalidStringFormatException;
 import com.github.javafaker.Faker;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import java.util.stream.Stream;
@@ -14,6 +15,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 class CityTest {
 
+  private static final String MANDATORY_FIELD = "City is mandatory";
+  private static final String FIELD = "City.value";
+  private static final String TARGET = City.class.getSimpleName();
+  private static final String VIOLATION_MESSAGE = "The City name must not be blank or null";
   private static final Faker faker = new Faker();
 
   private static Stream<String> invalidParams() {
@@ -48,9 +53,13 @@ class CityTest {
   @MethodSource("invalidParams")
   @DisplayName("Given invalid parameters when build City then throw exception")
   void givenInvalidParametersWhenBuildCityThenThrowException(final String cityName) {
+    final var exception = catchThrowableOfType(() -> City.of(cityName),
+        InvalidStringFormatException.class);
 
-    assertThatThrownBy(() -> City.of(cityName))
-        .hasMessage("City is mandatory")
-        .isExactlyInstanceOf(IllegalArgumentException.class);
+    assertThat(exception.getMessage()).isEqualTo(MANDATORY_FIELD);
+    assertThat(exception.getParameter()).isEqualTo(FIELD);
+    assertThat(exception.getTarget()).isEqualTo(TARGET);
+    assertThat(exception.getField()).isEqualTo(FIELD);
+    assertThat(exception.getViolationMessage()).isEqualTo(VIOLATION_MESSAGE);
   }
 }
