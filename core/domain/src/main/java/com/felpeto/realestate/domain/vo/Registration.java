@@ -1,6 +1,7 @@
 package com.felpeto.realestate.domain.vo;
 
 import com.felpeto.realestate.domain.exception.InvalidFormatException;
+import com.felpeto.realestate.domain.exception.InvalidStringFormatException;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,7 +31,11 @@ public final class Registration {
 
   public static Registration of(final String value) {
     if (StringUtils.isBlank(value)) {
-      throw new IllegalArgumentException(MANDATORY_FIELD);
+      throw new InvalidStringFormatException(MANDATORY_FIELD,
+          FIELD,
+          TARGET,
+          FIELD,
+          VIOLATION_MESSAGE);
     }
 
     if (!PATTERN.matcher(value).matches()) {

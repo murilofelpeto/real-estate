@@ -1,9 +1,10 @@
 package com.felpeto.realestate.domain.vo;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
 
 import com.felpeto.realestate.domain.exception.InvalidFormatException;
+import com.felpeto.realestate.domain.exception.InvalidStringFormatException;
 import com.github.javafaker.Faker;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import java.util.stream.Stream;
@@ -15,7 +16,14 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 class RegistrationTest {
 
-  private static final String REGEX = "[0-9]{5}\\.[0-9]{1}\\.[0-9]{7}-[0-9]{2}";
+  private static final String REGEX_MESSAGE = "^[0-9]{5}.[0-9]{1}.[0-9]{7}-[0-9]{2}$";
+  private static final String REGEX = "[0-9]{5}.[0-9]{1}.[0-9]{7}-[0-9]{2}";
+  private static final String INVALID_REGISTRATION_FORMAT = "Invalid registration format";
+  private static final String FIELD = "value";
+  private static final String TARGET = Registration.class.getSimpleName();
+  private static final String VIOLATION_MESSAGE =
+      "You must provide a registration following the pattern: " + REGEX_MESSAGE;
+  private static final String MANDATORY_FIELD = "Registration is mandatory";
   private static final Faker faker = new Faker();
 
   private static Stream<String> invalidParams() {
@@ -51,9 +59,14 @@ class RegistrationTest {
   void givenInvalidPatternWhenBuildRegistrationThenThrowException() {
     final var expression = faker.rickAndMorty().location();
 
-    assertThatThrownBy(() -> Registration.of(expression))
-        .hasMessage("Invalid registration format")
-        .isExactlyInstanceOf(InvalidFormatException.class);
+    final var exception = catchThrowableOfType(() -> Registration.of(expression),
+        InvalidFormatException.class);
+
+    assertThat(exception.getMessage()).isEqualTo(INVALID_REGISTRATION_FORMAT);
+    assertThat(exception.getParameter()).isEqualTo(FIELD);
+    assertThat(exception.getTarget()).isEqualTo(TARGET);
+    assertThat(exception.getField()).isEqualTo(FIELD);
+    assertThat(exception.getViolationMessage()).isEqualTo(VIOLATION_MESSAGE);
   }
 
   @ParameterizedTest
@@ -61,8 +74,13 @@ class RegistrationTest {
   @DisplayName("Given invalid parameters when build Registration then throw exception")
   void givenInvalidParametersWhenBuildRegistrationThenThrowException(final String registration) {
 
-    assertThatThrownBy(() -> Registration.of(registration))
-        .hasMessage("Registration is mandatory")
-        .isExactlyInstanceOf(IllegalArgumentException.class);
+    final var exception = catchThrowableOfType(() -> Registration.of(registration),
+        InvalidStringFormatException.class);
+
+    assertThat(exception.getMessage()).isEqualTo(MANDATORY_FIELD);
+    assertThat(exception.getParameter()).isEqualTo(FIELD);
+    assertThat(exception.getTarget()).isEqualTo(TARGET);
+    assertThat(exception.getField()).isEqualTo(FIELD);
+    assertThat(exception.getViolationMessage()).isEqualTo(VIOLATION_MESSAGE);
   }
 }

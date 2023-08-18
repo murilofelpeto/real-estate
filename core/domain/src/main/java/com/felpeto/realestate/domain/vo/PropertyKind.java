@@ -1,9 +1,13 @@
 package com.felpeto.realestate.domain.vo;
 
+import static java.text.MessageFormat.format;
+
+import com.felpeto.realestate.domain.exception.InvalidStringFormatException;
+import com.felpeto.realestate.domain.exception.ValueNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
 @Getter
 public enum PropertyKind {
@@ -13,8 +17,13 @@ public enum PropertyKind {
   LAND("land"),
   INDUSTRIAL("industrial");
 
-  private static final String VALUE_NOT_FOUND = "PropertyKind | Desired value not found";
   private static final Map<String, PropertyKind> VALUE_MAP = new HashMap<>();
+
+  private static final String MANDATORY_FIELD = "property kind is mandatory";
+  private static final String FIELD = "PropertyKind.kind";
+  private static final String TARGET = PropertyKind.class.getSimpleName();
+  private static final String VIOLATION_MESSAGE = "You must inform a valid property kind";
+  private static final String DESCRIPTION_NOT_FOUND = "property kind not found: {0}";
 
   static {
     for (PropertyKind propertyKind : values()) {
@@ -29,12 +38,22 @@ public enum PropertyKind {
   }
 
   public static PropertyKind of(final String propertyKind) {
-    Objects.requireNonNull(propertyKind, VALUE_NOT_FOUND);
-    String lowercaseKind = propertyKind.toLowerCase();
-    PropertyKind result = VALUE_MAP.get(lowercaseKind);
-    if (result == null) {
-      throw new IllegalArgumentException(VALUE_NOT_FOUND);
+    if (StringUtils.isBlank(propertyKind)) {
+      throw new InvalidStringFormatException(MANDATORY_FIELD,
+          FIELD,
+          TARGET,
+          FIELD,
+          VIOLATION_MESSAGE);
     }
-    return result;
+
+    if (!VALUE_MAP.containsKey(propertyKind.toLowerCase())) {
+      throw new ValueNotFoundException(format(DESCRIPTION_NOT_FOUND, propertyKind),
+          FIELD,
+          TARGET,
+          FIELD,
+          VIOLATION_MESSAGE);
+    }
+
+    return VALUE_MAP.get(propertyKind.toLowerCase());
   }
 }
