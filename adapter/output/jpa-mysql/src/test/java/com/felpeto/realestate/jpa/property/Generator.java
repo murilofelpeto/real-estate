@@ -5,10 +5,10 @@ import com.felpeto.realestate.domain.vo.PropertyKind;
 import com.github.javafaker.Faker;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.UUID;
 import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
@@ -123,29 +123,24 @@ public class Generator {
     System.out.println(sb);
   }
 
-  @RepeatedTest(500)
+  @Test
   void createPropertyLeisureItemEntity() {
-    final var propertyId = faker.number().numberBetween(1, 100);
-    final var leisureItemId = faker.number().numberBetween(1, 37);
+    final var queries = new HashSet<String>();
 
-    StringBuilder sb = new StringBuilder();
-    sb.append("INSERT INTO property_leisure_item (");
-    sb.append("property_id, ");
-    sb.append("leisure_item_id");
-    sb.append(") ");
-    sb.append("VALUES (");
-    sb.append("'" + propertyId + "', ");
-    sb.append("'" + leisureItemId + "'");
-    sb.append(");");
-
-    System.out.println(sb);
-  }
-
-  private List<String> createLeisureItems() {
-    final var items = new ArrayList<String>();
-    for (int i = 0; i < 10; i++) {
-      items.add(faker.options().option(LeisureItem.class).getDescription());
+    while (queries.size() < 500) {
+      final var propertyId = faker.number().numberBetween(1, 100);
+      final var leisureItemId = faker.number().numberBetween(1, 37);
+      final var query = "INSERT INTO property_leisure_item ("
+          + "property_id, "
+          + "leisure_item_id"
+          + ") "
+          + "VALUES ("
+          + "'" + propertyId + "', "
+          + "'" + leisureItemId + "'"
+          + ");";
+      queries.add(query);
     }
-    return items;
+
+    queries.forEach(System.out::println);
   }
 }
