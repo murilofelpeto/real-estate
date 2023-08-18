@@ -143,4 +143,25 @@ public class Generator {
 
     queries.forEach(System.out::println);
   }
+
+  @Test
+  void createCondominiumLeisureItemEntity() {
+    final var queries = new HashSet<String>();
+
+    while (queries.size() < 500) {
+      final var propertyId = faker.number().numberBetween(1, 100);
+      final var leisureItemId = faker.number().numberBetween(1, 37);
+      final var query = "INSERT INTO condominium_leisure_item ("
+          + "property_id, "
+          + "leisure_item_id"
+          + ") "
+          + "VALUES ("
+          + "'" + propertyId + "', "
+          + "'" + leisureItemId + "'"
+          + ");";
+      queries.add(query);
+    }
+
+    queries.forEach(System.out::println);
+  }
 }

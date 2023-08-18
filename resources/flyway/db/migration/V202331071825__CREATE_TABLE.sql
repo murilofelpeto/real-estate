@@ -1,57 +1,70 @@
-create table leisure_item (
-        leisure_item_id bigint not null auto_increment,
-        item varchar(255) not null,
-        uuid BINARY(16) not null,
-        primary key (leisure_item_id)
-    );
+-- Adminer 4.8.1 MySQL 8.0.34 dump
 
-create table property (
-        property_id bigint not null auto_increment,
-        building_area integer not null,
-        city varchar(100) not null,
-        complement varchar(100),
-        condominium_price decimal(38,2),
-        country varchar(100) not null,
-        description varchar(255) not null,
-        garage integer not null,
-        house_number integer not null,
-        is_condominium bit,
-        is_furnished bit,
-        is_rent bit,
-        is_sale bit,
-        land_size integer not null,
-        neighborhood varchar(150),
-        property_kind varchar(255) not null,
-        registration varchar(255) not null,
-        rent_price decimal(38,2),
-        rooms integer not null,
-        sale_price decimal(38,2),
-        state varchar(2) not null,
-        street_name varchar(255) not null,
-        taxes decimal(38,2) not null,
-        uuid BINARY(16) not null,
-        zipcode varchar(50) not null,
-        primary key (property_id)
-    );
+SET NAMES utf8;
+SET time_zone = '+00:00';
+SET foreign_key_checks = 0;
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
-create table property_leisure_item (
-        property_id bigint not null,
-        leisure_item_id bigint not null,
-        primary key (property_id, leisure_item_id)
-    );
+SET NAMES utf8mb4;
 
-create index idx_leisure_item_entity on leisure_item (leisure_item_id, uuid, item);
+CREATE TABLE `leisure_item` (
+  `leisure_item_id` bigint NOT NULL AUTO_INCREMENT,
+  `item` varchar(255) NOT NULL,
+  `uuid` binary(16) NOT NULL,
+  PRIMARY KEY (`leisure_item_id`),
+  UNIQUE KEY `UK_constraint_leisure_item_item` (`item`),
+  UNIQUE KEY `UK_constraint_leisure_item_uuid` (`uuid`),
+  KEY `idx_leisure_item_entity` (`leisure_item_id`,`uuid`,`item`)
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-alter table leisure_item add constraint UK_constraint_leisure_item_item unique (item);
 
-alter table leisure_item add constraint UK_constraint_leisure_item_uuid unique (uuid);
+CREATE TABLE `property` (
+  `property_id` bigint NOT NULL AUTO_INCREMENT,
+  `building_area` int NOT NULL,
+  `city` varchar(100) NOT NULL,
+  `complement` varchar(100) DEFAULT NULL,
+  `condominium_price` decimal(38,2) DEFAULT NULL,
+  `country` varchar(100) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `garage` int NOT NULL,
+  `house_number` int NOT NULL,
+  `is_condominium` bit(1) DEFAULT NULL,
+  `is_furnished` bit(1) DEFAULT NULL,
+  `is_rent` bit(1) DEFAULT NULL,
+  `is_sale` bit(1) DEFAULT NULL,
+  `land_size` int NOT NULL,
+  `neighborhood` varchar(150) DEFAULT NULL,
+  `property_kind` varchar(255) NOT NULL,
+  `registration` varchar(255) NOT NULL,
+  `rent_price` decimal(38,2) DEFAULT NULL,
+  `rooms` int NOT NULL,
+  `sale_price` decimal(38,2) DEFAULT NULL,
+  `state` varchar(2) NOT NULL,
+  `street_name` varchar(255) NOT NULL,
+  `taxes` decimal(38,2) NOT NULL,
+  `uuid` binary(16) NOT NULL,
+  `zipcode` varchar(50) NOT NULL,
+  PRIMARY KEY (`property_id`),
+  UNIQUE KEY `UK_constraint_property_registration` (`registration`),
+  UNIQUE KEY `UK_constraint_property_uuid` (`uuid`),
+  KEY `idx_property_entity` (`property_id`,`uuid`,`registration`)
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-create index idx_property_entity on property (property_id, uuid, registration);
 
-alter table property add constraint UK_constraint_property_registration unique (registration);
+CREATE TABLE `property_leisure_item` (
+  `property_id` bigint NOT NULL,
+  `leisure_item_id` bigint NOT NULL,
+  PRIMARY KEY (`property_id`,`leisure_item_id`),
+  KEY `FK_property_leisure_item_id` (`leisure_item_id`),
+  CONSTRAINT `FK_property_leisure_item_id` FOREIGN KEY (`leisure_item_id`) REFERENCES `leisure_item` (`leisure_item_id`),
+  CONSTRAINT `FK_property_property_id` FOREIGN KEY (`property_id`) REFERENCES `property` (`property_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-alter table property add constraint UK_constraint_property_uuid unique (uuid);
-
-alter table property_leisure_item add constraint FK_leisure_item_id foreign key (leisure_item_id) references leisure_item (leisure_item_id);
-
-alter table property_leisure_item add constraint FK_property_id foreign key (property_id) ;
+CREATE TABLE `condominium_leisure_item` (
+  `property_id` bigint NOT NULL,
+  `leisure_item_id` bigint NOT NULL,
+  PRIMARY KEY (`property_id`,`leisure_item_id`),
+  KEY `FK_condominium_leisure_item_id` (`leisure_item_id`),
+  CONSTRAINT `FK_condominium_leisure_item_id` FOREIGN KEY (`leisure_item_id`) REFERENCES `leisure_item` (`leisure_item_id`),
+  CONSTRAINT `FK_condominium_property_id` FOREIGN KEY (`property_id`) REFERENCES `property` (`property_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

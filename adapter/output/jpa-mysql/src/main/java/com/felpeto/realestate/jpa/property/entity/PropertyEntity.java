@@ -50,7 +50,7 @@ public class PropertyEntity {
   private String propertyKind;
 
   @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(name = "property_leisure_item",
+  @JoinTable(name = "condominium_leisure_item",
       joinColumns =
       @JoinColumn(name = "property_id"),
       inverseJoinColumns = @JoinColumn(name = "leisure_item_id"))
