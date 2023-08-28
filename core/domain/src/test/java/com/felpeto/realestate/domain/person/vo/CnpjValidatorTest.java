@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class CnpjValidatorTest {
 
@@ -59,6 +60,13 @@ class CnpjValidatorTest {
     assertThat(exception.getTarget()).isEqualTo(TARGET);
     assertThat(exception.getField()).isEqualTo(FIELD);
     assertThat(exception.getViolationMessage()).isEqualTo(INVALID_DIGIT_MESSAGE);
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"92.603.295/0001-09", "51.193.665/0001-08"})
+  @DisplayName("Given existent cnpj when validate then do not throw exception")
+  void givenNonExistentCnpjWhenValidateThenDoNotThrowException(final String cnpj) {
+    assertDoesNotThrow(() -> CnpjValidator.validate(cnpj));
   }
 
   @ParameterizedTest

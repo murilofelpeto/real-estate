@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class CpfValidatorTest {
 
@@ -34,6 +35,13 @@ class CpfValidatorTest {
   void givenValidCpfWhenValidateThenDoNotThrowException() {
     final var incompleteCpf = faker.expression(faker.regexify(REGEX));
     final var cpf = generateUnformattedCpf(incompleteCpf);
+    assertDoesNotThrow(() -> CpfValidator.validate(cpf));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"668.743.030-07", "246.981.040-09"})
+  @DisplayName("Given existent cpf when validate then do not throw exception")
+  void givenNonExistentCpfWhenValidateThenDoNotThrowException(final String cpf) {
     assertDoesNotThrow(() -> CpfValidator.validate(cpf));
   }
 

@@ -2,7 +2,9 @@ package com.felpeto.realestate.domain.person.vo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
 
+import com.felpeto.realestate.domain.exception.InvalidDocumentException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +22,42 @@ class DocumentTypeTest {
   void givenValidCnpjWhenCallValidateThenDoNothing() {
     assertThatCode(() -> DocumentType.CNPJ.validate("86.920.365/0001-50"))
         .doesNotThrowAnyException();
+  }
+
+  @Test
+  @DisplayName("Given invalid CNPJ when call validate then throw exception")
+  void givenInvalidCnpjWhenCallValidateThenThrowException() {
+    final String invalidCnpj = "Invalid CNPJ";
+    final String field = "cnpj";
+    final String target = CnpjValidator.class.getSimpleName();
+    final String cnpjDoesNotExist = "The CNPJ does not exist.";
+
+    final var exception = catchThrowableOfType(() -> DocumentType.CNPJ.validate("12345678901235"),
+        InvalidDocumentException.class);
+
+    assertThat(exception.getMessage()).isEqualTo(invalidCnpj);
+    assertThat(exception.getParameter()).isEqualTo(field);
+    assertThat(exception.getTarget()).isEqualTo(target);
+    assertThat(exception.getField()).isEqualTo(field);
+    assertThat(exception.getViolationMessage()).isEqualTo(cnpjDoesNotExist);
+  }
+
+  @Test
+  @DisplayName("Given invalid CPF when call validate then throw exception")
+  void givenInvalidCpfWhenCallValidateThenThrowException() {
+    final String invalidCpf = "Invalid CPF";
+    final String field = "cpf";
+    final String target = CpfValidator.class.getSimpleName();
+    final String cpfDoesNotExist = "The CPF does not exist.";
+
+    final var exception = catchThrowableOfType(() -> DocumentType.CPF.validate("12345678902"),
+        InvalidDocumentException.class);
+
+    assertThat(exception.getMessage()).isEqualTo(invalidCpf);
+    assertThat(exception.getParameter()).isEqualTo(field);
+    assertThat(exception.getTarget()).isEqualTo(target);
+    assertThat(exception.getField()).isEqualTo(field);
+    assertThat(exception.getViolationMessage()).isEqualTo(cpfDoesNotExist);
   }
 
   @Test

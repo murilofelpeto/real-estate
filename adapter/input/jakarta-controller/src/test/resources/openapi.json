@@ -169,6 +169,16 @@
           },
           "204" : {
             "description" : "empty list"
+          },
+          "422" : {
+            "description" : "Invalid values provided for filtering or pagination",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
           }
         }
       }
@@ -333,6 +343,49 @@
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/LeisureItemsResponseDto"
+            }
+          }
+        }
+      },
+      "ErrorDetails" : {
+        "type" : "object",
+        "properties" : {
+          "target" : {
+            "type" : "string"
+          },
+          "field" : {
+            "type" : "string"
+          },
+          "violationMessage" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ErrorResponseDto" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "parameter" : {
+            "type" : "string"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "details" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ErrorDetails"
             }
           }
         }

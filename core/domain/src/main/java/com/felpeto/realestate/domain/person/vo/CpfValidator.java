@@ -37,8 +37,8 @@ public class CpfValidator {
     int dig10 = calculateDigit(number, 9);
     int dig11 = calculateDigit(number, 10);
 
-    if ((dig10 != Character.getNumericValue(number.charAt(9))) ||
-        (dig11 != Character.getNumericValue(number.charAt(10)))) {
+    if ((dig10 != Character.getNumericValue(number.charAt(9)))
+        || (dig11 != Character.getNumericValue(number.charAt(10)))) {
 
       throw new InvalidDocumentException(INVALID_CPF,
           FIELD,

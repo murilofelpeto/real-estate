@@ -46,13 +46,13 @@ class PropertyRepositoryTest {
       and (p.country = :country OR :country is null)
       and (p.state = :state OR :state is null)
       and (p.city = :city OR :city is null)
-      (p.neighborhood = :neighborhood OR :neighborhood is null)
+      and (p.neighborhood = :neighborhood OR :neighborhood is null)
       and (p.landSize = :size OR :size is null)
       and (p.isRent = :isRent OR :isRent is null)
       and (p.isSale = :isSale OR :isSale is null)
       and (p.isFurnished = :isFurnished OR :isFurnished is null)
       and (p.garage = :garage OR :garage is null)
-      order by p.{sort} {sortMode}     
+      order by p.{sort} {sortMode}
       """;
 
   private final Faker faker = new Faker();

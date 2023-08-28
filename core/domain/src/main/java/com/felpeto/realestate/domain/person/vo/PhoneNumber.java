@@ -13,7 +13,7 @@ import lombok.experimental.FieldNameConstants;
 @ToString
 @EqualsAndHashCode
 @FieldNameConstants(level = PRIVATE)
-public class PhoneNumber {
+public final class PhoneNumber {
 
   private static final String INVALID_NUMBER = "{0} must be greater than 0";
   private static final String FIELD = "PhoneNumber.{0}";

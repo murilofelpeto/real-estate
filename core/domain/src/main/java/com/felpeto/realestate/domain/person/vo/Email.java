@@ -9,12 +9,12 @@ import org.apache.commons.validator.routines.EmailValidator;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class Email {
+public final class Email {
 
   private static final String MANDATORY_FIELD = "Email is mandatory";
   private static final String FIELD = "Email.value";
   private static final String TARGET = Email.class.getSimpleName();
-  private static final String VIOLATION_MESSAGE = "The Email must not be blank or null";
+  private static final String VIOLATION_MESSAGE = "The Email must be valid";
 
   private static final EmailValidator EMAIL = EmailValidator.getInstance(true, true);
 

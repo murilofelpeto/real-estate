@@ -37,9 +37,9 @@ public class OwnerRequestDto {
   @NotBlank(message = "Document is mandatory")
   private String document;
 
-  @Schema(name = "document type", requiredMode = REQUIRED, exampleClasses = DocumentType.class)
+  @Schema(name = "document type", requiredMode = REQUIRED, allowableValues = {"CPF", "CNPJ"})
   @NotNull(message = "Document type is mandatory")
-  private DocumentType documentType;
+  private String documentType;
 
   @Schema(name = "country", requiredMode = REQUIRED)
   @NotBlank(message = "Country is mandatory")

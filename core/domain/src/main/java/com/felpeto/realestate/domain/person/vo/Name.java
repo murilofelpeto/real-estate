@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class Name {
+public final class Name {
 
   private static final String MANDATORY_FIELD = "Name is mandatory";
   private static final String FIELD = "Name.value";
