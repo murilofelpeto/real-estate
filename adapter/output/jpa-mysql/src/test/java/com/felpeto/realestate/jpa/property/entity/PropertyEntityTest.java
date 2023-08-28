@@ -3,8 +3,8 @@ package com.felpeto.realestate.jpa.property.entity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.felpeto.realestate.domain.vo.LeisureItem;
-import com.felpeto.realestate.domain.vo.PropertyKind;
+import com.felpeto.realestate.domain.property.vo.LeisureItem;
+import com.felpeto.realestate.domain.property.vo.PropertyKind;
 import com.github.javafaker.Faker;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;

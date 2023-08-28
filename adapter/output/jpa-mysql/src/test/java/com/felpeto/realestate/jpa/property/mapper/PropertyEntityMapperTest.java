@@ -4,8 +4,8 @@ import static com.felpeto.realestate.jpa.property.mapper.PropertyEntityMapper.to
 import static com.felpeto.realestate.jpa.property.mapper.PropertyEntityMapper.toProperty;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.felpeto.realestate.domain.vo.LeisureItem;
-import com.felpeto.realestate.domain.vo.PropertyKind;
+import com.felpeto.realestate.domain.property.vo.LeisureItem;
+import com.felpeto.realestate.domain.property.vo.PropertyKind;
 import com.felpeto.realestate.jpa.property.entity.LeisureItemEntity;
 import com.felpeto.realestate.jpa.property.entity.PropertyEntity;
 import com.github.javafaker.Faker;

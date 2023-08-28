@@ -5,23 +5,23 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import com.felpeto.realestate.domain.Filter;
 import com.felpeto.realestate.domain.Page;
 import com.felpeto.realestate.domain.property.Property;
 import com.felpeto.realestate.domain.property.PropertySize;
+import com.felpeto.realestate.domain.property.vo.Condominium;
+import com.felpeto.realestate.domain.property.vo.LeisureItem;
+import com.felpeto.realestate.domain.property.vo.Money;
+import com.felpeto.realestate.domain.property.vo.PropertyFilter;
+import com.felpeto.realestate.domain.property.vo.PropertyKind;
+import com.felpeto.realestate.domain.property.vo.PropertyNumber;
+import com.felpeto.realestate.domain.property.vo.Registration;
+import com.felpeto.realestate.domain.property.vo.Rent;
+import com.felpeto.realestate.domain.property.vo.Sale;
+import com.felpeto.realestate.domain.property.vo.Size;
 import com.felpeto.realestate.domain.vo.Address;
 import com.felpeto.realestate.domain.vo.City;
-import com.felpeto.realestate.domain.vo.Condominium;
 import com.felpeto.realestate.domain.vo.Country;
-import com.felpeto.realestate.domain.vo.LeisureItem;
-import com.felpeto.realestate.domain.vo.Money;
 import com.felpeto.realestate.domain.vo.Neighborhood;
-import com.felpeto.realestate.domain.vo.PropertyKind;
-import com.felpeto.realestate.domain.vo.PropertyNumber;
-import com.felpeto.realestate.domain.vo.Registration;
-import com.felpeto.realestate.domain.vo.Rent;
-import com.felpeto.realestate.domain.vo.Sale;
-import com.felpeto.realestate.domain.vo.Size;
 import com.felpeto.realestate.domain.vo.State;
 import com.felpeto.realestate.domain.vo.StreetName;
 import com.felpeto.realestate.domain.vo.ZipCode;
@@ -53,7 +53,7 @@ class PropertyGetterTest {
   @DisplayName("Given page and filter when call findAll then return list of properties")
   void givenPageAndFilterWhenCallFindAllThenReturnListOfProperties() {
     final var page = Page.from(1, 10, "+total_value");
-    final var filter = Filter.builder()
+    final var filter = PropertyFilter.builder()
         .city(City.of(faker.address().city()))
         .country(Country.of(faker.address().country()))
         .garage(Size.of(faker.number().numberBetween(0, 10)))

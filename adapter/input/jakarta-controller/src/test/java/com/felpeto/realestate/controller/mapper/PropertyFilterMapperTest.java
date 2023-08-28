@@ -3,7 +3,7 @@ package com.felpeto.realestate.controller.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.felpeto.realestate.controller.dto.input.FilterDto;
-import com.felpeto.realestate.domain.vo.PropertyKind;
+import com.felpeto.realestate.domain.property.vo.PropertyKind;
 import com.github.javafaker.Faker;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class FilterMapperTest {
+class PropertyFilterMapperTest {
 
   private final Faker faker = new Faker();
 

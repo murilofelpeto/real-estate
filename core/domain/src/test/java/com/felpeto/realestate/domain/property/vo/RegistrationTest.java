@@ -1,4 +1,4 @@
-package com.felpeto.realestate.domain.vo;
+package com.felpeto.realestate.domain.property.vo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 class RegistrationTest {
 
   private static final String REGEX_MESSAGE = "^[0-9]{5}.[0-9]{1}.[0-9]{7}-[0-9]{2}$";
-  private static final String REGEX = "[0-9]{5}.[0-9]{1}.[0-9]{7}-[0-9]{2}";
+  private static final String REGEX = "[0-9]{5}\\.[0-9]{1}\\.[0-9]{7}-[0-9]{2}";
   private static final String INVALID_REGISTRATION_FORMAT = "Invalid registration format";
   private static final String FIELD = "value";
   private static final String TARGET = Registration.class.getSimpleName();

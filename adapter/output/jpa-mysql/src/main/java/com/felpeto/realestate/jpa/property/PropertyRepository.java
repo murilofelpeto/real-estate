@@ -2,14 +2,14 @@ package com.felpeto.realestate.jpa.property;
 
 import static com.felpeto.realestate.jpa.property.mapper.PropertyEntityMapper.toProperties;
 
-import com.felpeto.realestate.domain.Filter;
 import com.felpeto.realestate.domain.Page;
 import com.felpeto.realestate.domain.property.Property;
+import com.felpeto.realestate.domain.property.vo.PropertyFilter;
+import com.felpeto.realestate.domain.property.vo.PropertyKind;
+import com.felpeto.realestate.domain.property.vo.Size;
 import com.felpeto.realestate.domain.vo.City;
 import com.felpeto.realestate.domain.vo.Country;
 import com.felpeto.realestate.domain.vo.Neighborhood;
-import com.felpeto.realestate.domain.vo.PropertyKind;
-import com.felpeto.realestate.domain.vo.Size;
 import com.felpeto.realestate.domain.vo.State;
 import com.felpeto.realestate.jpa.property.entity.PropertyEntity;
 import com.felpeto.realestate.usecase.property.port.PropertyGateway;
@@ -49,13 +49,13 @@ public class PropertyRepository implements PropertyGateway {
   }
 
   @Override
-  public List<Property> findAll(final Page page, final Filter filter) {
+  public List<Property> findAll(final Page page, final PropertyFilter propertyFilter) {
     final var selectProperty = SELECT_FILTERED_PROPERTY
         .replace("{sort}", page.getSort())
         .replace("{sortMode}", page.getSortMode().name());
 
     final var query = entityManager.createQuery(selectProperty, PropertyEntity.class);
-    addQueryParameters(query, filter);
+    addQueryParameters(query, propertyFilter);
     query.setFirstResult(page.getOffset() * page.getLimit());
     query.setMaxResults(page.getLimit());
 
@@ -65,18 +65,18 @@ public class PropertyRepository implements PropertyGateway {
 
   private void addQueryParameters(
       final TypedQuery<PropertyEntity> query,
-      final Filter filter) {
+      final PropertyFilter propertyFilter) {
 
-    query.setParameter("propertyKind", map(filter.propertyKind(), PropertyKind::name));
-    query.setParameter("country", map(filter.country(), Country::getValue));
-    query.setParameter("state", map(filter.state(), State::getValue));
-    query.setParameter("city", map(filter.city(), City::getValue));
-    query.setParameter("neighborhood", map(filter.neighborhood(), Neighborhood::getValue));
-    query.setParameter("size", map(filter.size(), Size::getValue));
-    query.setParameter("garage", map(filter.garage(), Size::getValue));
-    query.setParameter("isRent", map(filter.isRent(), Boolean::valueOf));
-    query.setParameter("isSale", map(filter.isSale(), Boolean::valueOf));
-    query.setParameter("isFurnished", map(filter.isFurnished(), Boolean::valueOf));
+    query.setParameter("propertyKind", map(propertyFilter.propertyKind(), PropertyKind::name));
+    query.setParameter("country", map(propertyFilter.country(), Country::getValue));
+    query.setParameter("state", map(propertyFilter.state(), State::getValue));
+    query.setParameter("city", map(propertyFilter.city(), City::getValue));
+    query.setParameter("neighborhood", map(propertyFilter.neighborhood(), Neighborhood::getValue));
+    query.setParameter("size", map(propertyFilter.size(), Size::getValue));
+    query.setParameter("garage", map(propertyFilter.garage(), Size::getValue));
+    query.setParameter("isRent", map(propertyFilter.isRent(), Boolean::valueOf));
+    query.setParameter("isSale", map(propertyFilter.isSale(), Boolean::valueOf));
+    query.setParameter("isFurnished", map(propertyFilter.isFurnished(), Boolean::valueOf));
   }
 
   private <T, R> R map(T value, Function<T, R> mapper) {

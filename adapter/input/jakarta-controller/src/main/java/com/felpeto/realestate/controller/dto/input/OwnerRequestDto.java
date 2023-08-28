@@ -38,7 +38,7 @@ public class OwnerRequestDto {
   private String document;
 
   @Schema(name = "document type", requiredMode = REQUIRED, exampleClasses = DocumentType.class)
-  @NotBlank(message = "Email is mandatory")
+  @NotNull(message = "Document type is mandatory")
   private DocumentType documentType;
 
   @Schema(name = "country", requiredMode = REQUIRED)

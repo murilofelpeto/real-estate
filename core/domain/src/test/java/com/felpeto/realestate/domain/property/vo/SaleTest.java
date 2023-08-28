@@ -1,4 +1,4 @@
-package com.felpeto.realestate.domain.vo;
+package com.felpeto.realestate.domain.property.vo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -10,52 +10,52 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class RentTest {
+class SaleTest {
 
   private final Faker faker = new Faker();
 
   @Test
   @DisplayName("Should return a valid toString")
   void validToString() {
-    ToStringVerifier.forClass(Rent.class)
+    ToStringVerifier.forClass(Sale.class)
         .verify();
   }
 
   @Test
   @DisplayName("Should return valid Equals and Hashcode")
   void validEqualsAndHashCode() {
-    EqualsVerifier.forClass(Rent.class)
-        .withIgnoredFields("isRent")
+    EqualsVerifier.forClass(Sale.class)
+        .withIgnoredFields("isSale")
         .verify();
   }
 
   @Test
-  @DisplayName("Given isRent true when build Rent then return valid Rent")
-  void givenIsRentTrueWhenBuildRentThenReturnValidRent() {
+  @DisplayName("Given isSale true when build Sale then return valid Sale")
+  void givenIsSaleTrueWhenBuildSaleThenReturnValidSale() {
     final var price = Money.of(BigDecimal.valueOf(faker.number().randomDouble(2, 50, 999)));
 
-    final var rent = Rent.of(true, price);
+    final var sale = Sale.of(true, price);
 
-    assertThat(rent.isRent()).isTrue();
-    assertThat(rent.getPrice()).isEqualTo(price);
+    assertThat(sale.isSale()).isTrue();
+    assertThat(sale.getPrice()).isEqualTo(price);
   }
 
   @Test
-  @DisplayName("Given isRent false when build Rent then return rent with null fields")
-  void givenIsRentFalseWhenBuildRentThenReturnRentWithNullFields() {
+  @DisplayName("Given isSale false when build Sale then return Sale with null fields")
+  void givenIsSaleFalseWhenBuildSaleThenReturnSaleWithNullFields() {
     final var price = Money.of(BigDecimal.valueOf(faker.number().randomDouble(2, 50, 999)));
 
-    final var rent = Rent.of(false, price);
+    final var sale = Sale.of(false, price);
 
-    assertThat(rent.isRent()).isFalse();
-    assertThat(rent.getPrice()).isNull();
+    assertThat(sale.isSale()).isFalse();
+    assertThat(sale.getPrice()).isNull();
   }
 
   @Test
-  @DisplayName("Given invalid parameters when build Rent then throw exception")
-  void givenInvalidParametersWhenBuildRentThenThrowException() {
+  @DisplayName("Given invalid parameters when build Sale then throw exception")
+  void givenInvalidParametersWhenBuildSaleThenThrowException() {
 
-    assertThatThrownBy(() -> Rent.of(true, null))
+    assertThatThrownBy(() -> Sale.of(true, null))
         .hasMessage("Price is mandatory")
         .isExactlyInstanceOf(NullPointerException.class);
   }

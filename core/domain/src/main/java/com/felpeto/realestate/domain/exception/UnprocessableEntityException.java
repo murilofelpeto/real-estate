@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public sealed class UnprocessableEntityException extends RuntimeException
-    permits InvalidFormatException, InvalidNumberLimitException, InvalidStringFormatException,
-    ValueNotFoundException {
+    permits InvalidDocumentException, InvalidFormatException, InvalidNumberLimitException,
+    InvalidStringFormatException, ValueNotFoundException {
 
   private final String parameter;
   private final String target;

@@ -3,12 +3,12 @@ package com.felpeto.realestate.controller.mapper;
 import static lombok.AccessLevel.PRIVATE;
 
 import com.felpeto.realestate.controller.dto.input.FilterDto;
-import com.felpeto.realestate.domain.Filter;
+import com.felpeto.realestate.domain.property.vo.PropertyFilter;
+import com.felpeto.realestate.domain.property.vo.PropertyKind;
+import com.felpeto.realestate.domain.property.vo.Size;
 import com.felpeto.realestate.domain.vo.City;
 import com.felpeto.realestate.domain.vo.Country;
 import com.felpeto.realestate.domain.vo.Neighborhood;
-import com.felpeto.realestate.domain.vo.PropertyKind;
-import com.felpeto.realestate.domain.vo.Size;
 import com.felpeto.realestate.domain.vo.State;
 import java.util.Optional;
 import java.util.function.Function;
@@ -18,8 +18,8 @@ import org.apache.commons.lang3.StringUtils;
 @NoArgsConstructor(access = PRIVATE)
 public class FilterMapper {
 
-  public static Filter toFilter(final FilterDto filterDto) {
-    return Filter.builder()
+  public static PropertyFilter toFilter(final FilterDto filterDto) {
+    return PropertyFilter.builder()
         .city(mapStringToDomainObject(filterDto.getCity(), City::of))
         .country(mapStringToDomainObject(filterDto.getCountry(), Country::of))
         .garage(mapDomainObject(filterDto.getGarage(), Size::of))

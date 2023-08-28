@@ -10,14 +10,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import com.felpeto.realestate.domain.Filter;
 import com.felpeto.realestate.domain.Page;
+import com.felpeto.realestate.domain.property.vo.LeisureItem;
+import com.felpeto.realestate.domain.property.vo.PropertyFilter;
+import com.felpeto.realestate.domain.property.vo.PropertyKind;
+import com.felpeto.realestate.domain.property.vo.Size;
 import com.felpeto.realestate.domain.vo.City;
 import com.felpeto.realestate.domain.vo.Country;
-import com.felpeto.realestate.domain.vo.LeisureItem;
 import com.felpeto.realestate.domain.vo.Neighborhood;
-import com.felpeto.realestate.domain.vo.PropertyKind;
-import com.felpeto.realestate.domain.vo.Size;
 import com.felpeto.realestate.domain.vo.State;
 import com.felpeto.realestate.jpa.property.entity.LeisureItemEntity;
 import com.felpeto.realestate.jpa.property.entity.PropertyEntity;
@@ -73,7 +73,7 @@ class PropertyRepositoryTest {
     final var limit = faker.number().numberBetween(5, 30);
     final var offset = faker.number().numberBetween(3, 29);
     final var page = Page.from(limit, offset, "+total_value");
-    final var filter = Filter.builder()
+    final var filter = PropertyFilter.builder()
         .city(City.of(faker.address().city()))
         .country(Country.of(faker.address().country()))
         .garage(Size.of(faker.number().numberBetween(0, 10)))
@@ -141,7 +141,7 @@ class PropertyRepositoryTest {
     final var limit = faker.number().numberBetween(5, 30);
     final var offset = faker.number().numberBetween(3, 29);
     final var page = Page.from(limit, offset, "+total_value");
-    final var filter = Filter.builder()
+    final var filter = PropertyFilter.builder()
         .city(null)
         .country(null)
         .garage(null)

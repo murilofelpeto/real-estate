@@ -1,4 +1,4 @@
-package com.felpeto.realestate.domain.vo;
+package com.felpeto.realestate.domain.property.vo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

@@ -1,4 +1,4 @@
-package com.felpeto.realestate.domain.vo;
+package com.felpeto.realestate.domain.property.vo;
 
 import static java.text.MessageFormat.format;
 import static java.util.Collections.emptyList;

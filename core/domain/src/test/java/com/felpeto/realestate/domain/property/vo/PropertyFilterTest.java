@@ -1,12 +1,10 @@
-package com.felpeto.realestate.domain;
+package com.felpeto.realestate.domain.property.vo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.felpeto.realestate.domain.vo.City;
 import com.felpeto.realestate.domain.vo.Country;
 import com.felpeto.realestate.domain.vo.Neighborhood;
-import com.felpeto.realestate.domain.vo.PropertyKind;
-import com.felpeto.realestate.domain.vo.Size;
 import com.felpeto.realestate.domain.vo.State;
 import com.github.javafaker.Faker;
 import com.jparams.verifier.tostring.ToStringVerifier;
@@ -15,21 +13,21 @@ import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class FilterTest {
+class PropertyFilterTest {
 
   private final Faker faker = new Faker();
 
   @Test
   @DisplayName("Should return a valid toString")
   void validToString() {
-    ToStringVerifier.forClass(Filter.class)
+    ToStringVerifier.forClass(PropertyFilter.class)
         .verify();
   }
 
   @Test
   @DisplayName("Should return valid Equals and Hashcode")
   void validEqualsAndHashCode() {
-    EqualsVerifier.forClass(Filter.class)
+    EqualsVerifier.forClass(PropertyFilter.class)
         .suppress(Warning.NULL_FIELDS)
         .verify();
   }
@@ -49,7 +47,7 @@ class FilterTest {
     final var isFurnished = faker.bool().bool();
     final var garage = Size.of(faker.number().numberBetween(1, 10));
 
-    final var filter = Filter.builder()
+    final var filter = PropertyFilter.builder()
         .city(city)
         .country(country)
         .garage(garage)
@@ -79,7 +77,7 @@ class FilterTest {
   @Test
   @DisplayName("Given all null field when build Filter then return Filter")
   void givenAllNullFieldWhenBuildFilterThenReturnFilter() {
-    final var filter = Filter.builder()
+    final var filter = PropertyFilter.builder()
         .city(null)
         .country(null)
         .garage(null)

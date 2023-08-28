@@ -1,8 +1,8 @@
 package com.felpeto.realestate.usecase.property;
 
-import com.felpeto.realestate.domain.Filter;
 import com.felpeto.realestate.domain.Page;
 import com.felpeto.realestate.domain.property.Property;
+import com.felpeto.realestate.domain.property.vo.PropertyFilter;
 import com.felpeto.realestate.usecase.property.port.PropertyGateway;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -20,7 +20,7 @@ public class PropertyGetter {
     this.propertyGateway = propertyGateway;
   }
 
-  public List<Property> findAll(final Page page, final Filter filter) {
-    return propertyGateway.findAll(page, filter);
+  public List<Property> findAll(final Page page, final PropertyFilter propertyFilter) {
+    return propertyGateway.findAll(page, propertyFilter);
   }
 }

@@ -4,7 +4,7 @@ import static java.text.MessageFormat.format;
 import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
 
-import com.felpeto.realestate.domain.vo.Size;
+import com.felpeto.realestate.domain.property.vo.Size;
 import lombok.Builder;
 import lombok.experimental.FieldNameConstants;
 

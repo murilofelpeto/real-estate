@@ -8,6 +8,7 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import com.felpeto.realestate.controller.dto.input.FilterDto;
 import com.felpeto.realestate.controller.dto.input.PageDto;
 import com.felpeto.realestate.controller.dto.output.PropertyResponseDto;
+import com.felpeto.realestate.controller.handler.dto.ErrorResponseDto;
 import com.felpeto.realestate.usecase.property.PropertyGetter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -48,7 +49,13 @@ public class PropertyController {
                   array = @ArraySchema(schema = @Schema(implementation = PropertyResponseDto.class)))),
           @ApiResponse(
               responseCode = "204",
-              description = "empty list")
+              description = "empty list"),
+          @ApiResponse(
+              responseCode = "422",
+              description = "Invalid values provided for filtering or pagination",
+              content = @Content(
+                  mediaType = APPLICATION_JSON,
+                  schema = @Schema(implementation = ErrorResponseDto.class)))
       })
   public Response findAll(
       @Valid @BeanParam final PageDto pageDto,

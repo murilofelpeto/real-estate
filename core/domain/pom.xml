@@ -11,8 +11,14 @@
     <dependency>
       <artifactId>commons-lang3</artifactId>
       <groupId>org.apache.commons</groupId>
-      <version>3.12.0</version>
+      <version>${commons-lang3.version}</version>
     </dependency>
+    <dependency>
+      <artifactId>commons-validator</artifactId>
+      <groupId>commons-validator</groupId>
+      <version>${commons-validator.version}</version>
+    </dependency>
+
 
     <dependency>
       <artifactId>junit-jupiter-api</artifactId>
@@ -80,6 +86,8 @@
   </parent>
 
   <properties>
+    <commons-lang3.version>3.12.0</commons-lang3.version>
+    <commons-validator.version>1.7</commons-validator.version>
     <maven.compiler.source>19</maven.compiler.source>
     <maven.compiler.target>19</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

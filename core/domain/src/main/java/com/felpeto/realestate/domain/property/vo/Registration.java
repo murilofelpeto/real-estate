@@ -1,4 +1,4 @@
-package com.felpeto.realestate.domain.vo;
+package com.felpeto.realestate.domain.property.vo;
 
 import com.felpeto.realestate.domain.exception.InvalidFormatException;
 import com.felpeto.realestate.domain.exception.InvalidStringFormatException;

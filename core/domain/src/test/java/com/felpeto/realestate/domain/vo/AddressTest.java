@@ -4,6 +4,7 @@ import static java.text.MessageFormat.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.felpeto.realestate.domain.property.vo.PropertyNumber;
 import com.github.javafaker.Faker;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import java.util.stream.Stream;

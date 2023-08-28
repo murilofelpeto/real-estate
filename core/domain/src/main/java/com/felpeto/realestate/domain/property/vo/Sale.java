@@ -1,4 +1,4 @@
-package com.felpeto.realestate.domain.vo;
+package com.felpeto.realestate.domain.property.vo;
 
 import static java.util.Objects.requireNonNull;
 
@@ -8,22 +8,23 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public final class Rent {
+public final class Sale {
 
-  private final boolean isRent;
+  private final boolean isSale;
   private final Money price;
 
-  private Rent(final boolean isRent, final Money price) {
-    this.isRent = isRent;
+
+  private Sale(final boolean isSale, final Money price) {
+    this.isSale = isSale;
     this.price = price;
   }
 
-  public static Rent of(final boolean isRent, final Money price) {
-    if (isRent) {
+  public static Sale of(final boolean isSale, final Money price) {
+    if (isSale) {
       requireNonNull(price, "Price is mandatory");
-      return new Rent(true, price);
+      return new Sale(true, price);
     }
-    return new Rent(false, null);
+    return new Sale(false, null);
   }
 
   @Override
@@ -34,8 +35,8 @@ public final class Rent {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    final Rent rent = (Rent) o;
-    return Objects.equals(price, rent.price);
+    final Sale sale = (Sale) o;
+    return Objects.equals(price, sale.price);
   }
 
   @Override
